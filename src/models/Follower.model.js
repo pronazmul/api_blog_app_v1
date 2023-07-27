@@ -1,7 +1,14 @@
 // Required Packeges
-import { Schema, model } from 'mongoose'
+import { Schema, model, Types } from 'mongoose'
 
-const FollowerSchema = Schema({}, { timestamps: true, versionKey: false })
+const FollowerSchema = Schema(
+  {
+    follower: { type: Types.ObjectId, ref: 'People', required: true },
+    following: { type: Types.ObjectId, ref: 'People', required: true },
+    active: { type: Boolean, default: true },
+  },
+  { timestamps: true, versionKey: false }
+)
 
 // Make Model
 const FollowerModel = model('Follower', FollowerSchema)

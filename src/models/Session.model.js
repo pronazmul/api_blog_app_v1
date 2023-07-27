@@ -3,7 +3,7 @@ import { Schema, Types, model } from 'mongoose'
 
 const sessionSchema = Schema(
   {
-    user: { type: Types.ObjectId, ref: 'people', required: true },
+    user: { type: Types.ObjectId, ref: 'People', required: true },
     valid: { type: Boolean, default: true },
     userAgent: { type: String },
   },

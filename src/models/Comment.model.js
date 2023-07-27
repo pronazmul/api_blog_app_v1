@@ -1,7 +1,15 @@
 // Required Packeges
-import { Schema, model } from 'mongoose'
+import { Schema, Types, model } from 'mongoose'
 
-const CommentSchema = Schema({}, { timestamps: true, versionKey: false })
+const CommentSchema = Schema(
+  {
+    content: { type: String, required: true },
+    user: { type: Types.ObjectId, ref: 'People', required: true },
+    blog: { type: Types.ObjectId, ref: 'Blog', required: true },
+    active: { type: Boolean, default: true },
+  },
+  { timestamps: true, versionKey: false }
+)
 
 // Make Model
 const CommentModel = model('Comment', CommentSchema)

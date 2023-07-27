@@ -1,28 +1,31 @@
 // Required Packeges
-import { Schema, model } from 'mongoose'
+import { Schema, model, Types } from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
 import { hash } from 'bcrypt'
 import config from '../config/index.js'
 
-const peopleSchema = Schema(
+const PeopleSchema = Schema(
   {
+    role: { type: Types.ObjectId, ref: 'Role', required: true },
     name: { type: String, required: true },
     email: {
       type: String,
       unique: true,
       required: true,
     },
-    password: { type: String },
-    mobile: { type: String },
-    dob: Date,
-    avatar: {
+    username: {
       type: String,
-      default: 'demo.jpg',
+      unique: true,
+      required: true,
     },
-    roles: [{ type: String, enum: ['admin', 'user'], default: 'user' }],
-    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
-    age: Number,
-    city: String,
+    password: { type: String },
+    avatar: { type: String },
+    phone: { type: String },
+    dob: Date,
+    bio: String,
+    followers: { type: Number, default: 0 },
+    following: { type: Number, default: 0 },
+    active: { type: Boolean, default: true },
   },
   {
     timestamps: true,
@@ -31,16 +34,16 @@ const peopleSchema = Schema(
 )
 
 // Integrate MOngoose Unique Validoator Plugin
-peopleSchema.plugin(uniqueValidator, {
+PeopleSchema.plugin(uniqueValidator, {
   message: '{VALUE} Already Exists!',
 })
 
-peopleSchema.pre('save', async function (next) {
+PeopleSchema.pre('save', async function (next) {
   this.roles = ['user']
   this.password = await hash(this.password, 10)
 })
 
-peopleSchema.methods.getUserInfo = async function () {
+PeopleSchema.methods.getUserInfo = async function () {
   return {
     _id: this?._id,
     name: this?.name,
@@ -53,7 +56,7 @@ peopleSchema.methods.getUserInfo = async function () {
 }
 
 // Post-middleware function
-peopleSchema.post(/^find|^findOne|^findById/, function (docs, next) {
+PeopleSchema.post(/^find|^findOne|^findById/, function (docs, next) {
   // Check the response is object
   if (typeof docs === 'object' && !Array.isArray(docs) && docs?.avatar) {
     docs.avatar = `${config.server_url}/${config.user_directory}/${docs.avatar}`
@@ -77,7 +80,7 @@ peopleSchema.post(/^find|^findOne|^findById/, function (docs, next) {
 })
 
 // Make User Modelresult
-const PeopleModel = model('People', peopleSchema)
+const PeopleModel = model('People', PeopleSchema)
 
 // Export User Model
 export default PeopleModel
