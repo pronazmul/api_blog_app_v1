@@ -1,0 +1,62 @@
+// Initialize Module
+const RoleConst = {}
+
+// Searching | Sorting | Filtering
+RoleConst.searchOptions = ['name', 'city']
+RoleConst.filterOptions = ['age', 'roles', 'status', 'city']
+RoleConst.sortOptions = []
+
+RoleConst.rolesData = [
+  {
+    name: 'admin',
+    permissions: [
+      'full_access',
+      'manage_users',
+      'manage_roles',
+      'manage_categories',
+      'manage_blogs',
+      'manage_tags',
+      'manage_comments',
+      'manage_likes',
+      'manage_followers',
+      'manage_notifications',
+    ],
+    description: 'Full access to all features and settings of the application.',
+  },
+  {
+    name: 'moderator',
+    permissions: [
+      'manage_blogs',
+      'manage_comments',
+      'moderate_likes',
+      'moderate_followers',
+      'manage_notifications',
+    ],
+    description:
+      'Ability to manage blogs, comments, likes, followers, and notifications.',
+  },
+  {
+    name: 'contributor',
+    permissions: [
+      'create_edit_own_blogs',
+      'manage_tags',
+      'comment_on_blogs',
+      'like_blogs',
+      'follow_users',
+    ],
+    description:
+      'Ability to create and edit their own blogs. Can manage tags, comment on blogs, like blogs, and follow other users.',
+  },
+  {
+    name: 'guest',
+    permissions: [
+      'view_blogs',
+      'view_categories',
+      'view_tags',
+      'view_comments',
+    ],
+    description: 'Can view blogs, categories, tags, and comments.',
+  },
+]
+
+export default RoleConst

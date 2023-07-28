@@ -10,6 +10,7 @@ GlobalConst.regexp = {
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   objectId: /^[0-9a-fA-F]{24}$/,
 }
+
 GlobalConst.supportedMimetypes = {
   image: ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/webp'],
   video: ['video/mp4', 'video/avi', 'video/mpeg', 'video/quicktime'],
@@ -21,6 +22,7 @@ GlobalConst.supportedMimetypes = {
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   ],
 }
+
 GlobalConst.allowedFileTypes = ['image', 'video', 'pdf', 'gif', 'xlsx', 'doc']
 GlobalConst.convertToWebpMimetype = ['image/png', 'image/jpg', 'image/jpeg']
 
