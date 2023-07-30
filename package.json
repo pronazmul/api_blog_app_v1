@@ -8,7 +8,8 @@
     "start": "NODE_ENV=production node app.js",
     "dev": "NODE_ENV=development nodemon app.js",
     "data:import": "node src/config/seeder",
-    "data:destroy": "node src/config/seeder -d"
+    "data:destroy": "node src/config/seeder -d",
+    "data:test": "node _temp"
   },
   "author": "Nazmul Huda",
   "license": "ISC",

@@ -25,6 +25,12 @@ const PeopleSchema = Schema(
     bio: String,
     followers: { type: Number, default: 0 },
     following: { type: Number, default: 0 },
+    address: {
+      street: String,
+      postCode: String,
+      city: String,
+      country: String,
+    },
     active: { type: Boolean, default: true },
   },
   {
