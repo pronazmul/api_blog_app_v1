@@ -54,10 +54,15 @@ PeopleSchema.methods.getUserInfo = async function () {
     _id: this?._id,
     name: this?.name,
     email: this?.email,
-    mobile: this?.mobile,
-    roles: this?.roles,
-    avatar: this.avatar,
-    status: this?.status,
+    username: this?.username,
+    phone: this?.phone,
+    dob: this?.roles,
+    bio: this?.bio,
+    avatar: this?.avatar,
+    followers: this?.followers,
+    following: this?.following,
+    address: this?.address,
+    active: this?.active,
   }
 }
 

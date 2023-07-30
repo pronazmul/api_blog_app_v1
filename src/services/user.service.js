@@ -37,6 +37,9 @@ UserService.find = async (reqQuery) => {
     UserConst.searchOptions,
     UserConst.filterOptions
   )
+
+  console.log({ reqQuery, query: JSON.stringify(query) })
+
   const sort = { [sortBy]: sortOrder }
   const projection = { password: 0 }
 

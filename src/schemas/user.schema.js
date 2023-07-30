@@ -12,9 +12,7 @@ UserSchema.create = object().shape({
   email: string()
     .matches(email, 'Invalid Email Address!')
     .required('Email is Required!'),
-  mobile: string()
-    .matches(mobile, 'Invalid Mobile Number!')
-    .required('Mobile Number is Required!'),
+  phone: string().optional().matches(mobile, 'Invalid phone Number!'),
   password: string()
     .matches(password, 'Invalid Password!')
     .required('Password Is Required!'),
@@ -56,29 +54,31 @@ UserSchema.updatePassword = object().shape({
 })
 
 UserSchema.updateRole = object().shape({
-  roles: array()
-    .typeError('Roles must be array')
-    .oneOf(UserConst.roles, 'Invalid Roles!'),
+  roles: array().typeError('Roles must be array'),
 })
 
-UserSchema.fetchAllUser = object().shape({
-  search: string().typeError('Search Value Should Be String!'),
-  page: number().typeError('Page Must be Number!').optional(),
-  limit: number()
-    .typeError('Limit must be a number')
-    .optional()
-    .max(500, 'Limit cannot exceed 500'),
-  sortBy: string()
-    .optional()
-    .oneOf(UserConst.sortOptions, 'Invalid sortBy value'),
-  sortOrder: string()
-    .optional()
-    .oneOf(['asc', 'desc'], 'Invalid sortOrder value'),
-  // Filter Options
-  age: number().typeError('Age Should Be Number!').optional(),
-  roles: string().typeError('Roles Should Be String!').optional(),
-  status: string().typeError('Status Should Be String!').optional(),
-  city: string().typeError('City Should Be String!').optional(),
-})
+UserSchema.fetchAllUser = object()
+  .shape({
+    search: string().typeError('Search Value Should Be String!'),
+    page: number().typeError('Page Must be Number!').optional(),
+    limit: number()
+      .typeError('Limit must be a number')
+      .optional()
+      .max(500, 'Limit cannot exceed 500'),
+    sortBy: string()
+      .optional()
+      .oneOf(UserConst.sortOptions, 'Invalid sortBy value'),
+    sortOrder: string()
+      .optional()
+      .oneOf(['asc', 'desc'], 'Invalid sortOrder value'),
+    // Filter Options
+    username: string().typeError('Username Should Be String!').optional(),
+    'address.city': string().typeError('Username Should Be String!').optional(),
+    active: string()
+      .optional()
+      .oneOf(['true', 'false'], 'Invalid Active Value!'),
+  })
+  .strict()
+  .noUnknown()
 
 export default UserSchema

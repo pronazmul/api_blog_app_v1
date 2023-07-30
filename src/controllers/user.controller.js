@@ -24,7 +24,7 @@ UserController.getSingleUser = async (req, res, next) => {
 
 UserController.allUsers = async (req, res, next) => {
   try {
-    let result = UserService.find(req.query)
+    let result = await UserService.find(req.query)
     let response = GlobalUtils.fromatResponse(
       result?.data,
       'All User Fetch success',
