@@ -6,7 +6,7 @@ import config from '../config/index.js'
 
 const PeopleSchema = Schema(
   {
-    role: { type: Types.ObjectId, ref: 'Role', required: true },
+    role: { type: Types.ObjectId, ref: 'role', required: true },
     name: { type: String, required: true },
     email: {
       type: String,
@@ -45,7 +45,6 @@ PeopleSchema.plugin(uniqueValidator, {
 })
 
 PeopleSchema.pre('save', async function (next) {
-  this.roles = ['user']
   this.password = await hash(this.password, 10)
 })
 

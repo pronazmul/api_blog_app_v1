@@ -1,6 +1,16 @@
 import { Router } from 'express'
-import authRoutes from './auth.route.js'
-import userRoutes from './user.route.js'
+import AuthRoutes from './auth.route.js'
+import UserRoutes from './user.route.js'
+import BlogRoutes from './blog.route.js'
+import CategoryRoutes from './category.route.js'
+import RoleRoutes from './role.route.js'
+import TagRoutes from './tag.route.js'
+import LikeRoutes from './like.route.js'
+import FollowerRoutes from './follower.route.js'
+import NotificationsRoutes from './notification.route.js'
+import CommentsRoutes from './comment.route.js'
+
+// Middleware
 import AuthMiddleware from '../middlewares/auth.middlewares.js'
 
 const router = Router()
@@ -9,8 +19,16 @@ const router = Router()
 router.use('/health', (_req, res) => res.status(200).json({ status: 'ok' }))
 
 // Application Routes
-router.use('/api/v1/auth', authRoutes)
-router.use('/api/v1/users', AuthMiddleware.authenticate, userRoutes)
+router.use('/api/v1/auth', AuthRoutes)
+router.use('/api/v1/users', AuthMiddleware.authenticate, UserRoutes)
+router.use('/api/v1/blogs', BlogRoutes)
+router.use('/api/v1/categories', CategoryRoutes)
+router.use('/api/v1/roles', RoleRoutes)
+router.use('/api/v1/tags', TagRoutes)
+router.use('/api/v1/likes', LikeRoutes)
+router.use('/api/v1/followers', FollowerRoutes)
+router.use('/api/v1/notifications', NotificationsRoutes)
+router.use('/api/v1/comments', CommentsRoutes)
 
 // Module Exports
 export default router

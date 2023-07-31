@@ -21,7 +21,8 @@ UserService.findOneById = async (id) => {
   try {
     let query = { _id: id }
     let projection = { password: 0, createdAt: 0, updatedAt: 0 }
-    let user = await UserModel.findById(query, projection)
+    let user = await UserModel.findById(query, projection).populate('role')
+    // let role = await RoleModel.findById({ _id: user.role })
     return user
   } catch (error) {
     throw error
@@ -37,12 +38,8 @@ UserService.find = async (reqQuery) => {
     UserConst.searchOptions,
     UserConst.filterOptions
   )
-
-  console.log({ reqQuery, query: JSON.stringify(query) })
-
   const sort = { [sortBy]: sortOrder }
   const projection = { password: 0 }
-
   try {
     const users = await UserModel.find(query, projection)
       .sort(sort)
@@ -55,11 +52,11 @@ UserService.find = async (reqQuery) => {
   }
 }
 
-UserService.updateOneById = async (id, data) => {
+UserService.updateOneById = async (id, payload) => {
   try {
     let query = { _id: id }
     let options = { new: true, select: 'name email mobile avatar roles' }
-    const result = await UserModel.findOneAndUpdate(query, data, options)
+    const result = await UserModel.findOneAndUpdate(query, payload, options)
     return result
   } catch (error) {
     throw error

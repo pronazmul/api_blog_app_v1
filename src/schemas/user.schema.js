@@ -2,7 +2,8 @@ import { object, string, ref, array, number } from 'yup'
 import GlobalConst from '../consts/global.const.js'
 import UserConst from '../consts/user.const.js'
 
-const { email, mobile, password } = GlobalConst.regexp
+const { emailExp, mobileExp, passwordExp, alphabetExp, numberExp } =
+  GlobalConst.regexp
 
 // Initialize Module
 const UserSchema = {}
@@ -10,39 +11,39 @@ const UserSchema = {}
 UserSchema.create = object().shape({
   name: string().required('Name is Required!'),
   email: string()
-    .matches(email, 'Invalid Email Address!')
+    .matches(emailExp, 'Invalid Email Address!')
     .required('Email is Required!'),
-  phone: string().optional().matches(mobile, 'Invalid phone Number!'),
+  phone: string().optional().matches(mobileExp, 'Invalid phone Number!'),
   password: string()
-    .matches(password, 'Invalid Password!')
+    .matches(passwordExp, 'Invalid Password!')
     .required('Password Is Required!'),
 })
 
 UserSchema.login = object().shape({
   email: string()
-    .matches(email, 'Authentication Failed')
+    .matches(emailExp, 'Authentication Failed')
     .required('Email is Required!'),
   password: string()
-    .matches(password, 'Authentication Failed')
+    .matches(passwordExp, 'Authentication Failed')
     .required('Password Is Required!'),
 })
 
 UserSchema.update = object().shape({
   name: string().optional(),
-  email: string().optional().matches(email, 'Invalid Email Address!'),
-  mobile: string().optional().matches(mobile, 'Invalid Mobile Number!'),
+  email: string().optional().matches(emailExp, 'Invalid Email Address!'),
+  mobile: string().optional().matches(mobileExp, 'Invalid Mobile Number!'),
 })
 
 UserSchema.updatePassword = object().shape({
   currentPassword: string()
     .required('Old Password is Required!')
-    .matches(password, 'Invalid Password!')
+    .matches(passwordExp, 'Invalid Password!')
     .min(8, 'Invalid Password!')
     .max(50, 'Invalid Password!'),
   newPassword: string()
     .required('New Password is Required!')
     .notOneOf([ref('currentPassword')], 'Nothing to change!')
-    .matches(password, 'Uppercase Lowercase Special char Required')
+    .matches(passwordExp, 'Uppercase Lowercase Special char Required')
     .min(8, 'Password Should be minimum 8 character')
     .max(50, 'Too long'),
   confirmPassword: string()
@@ -59,12 +60,9 @@ UserSchema.updateRole = object().shape({
 
 UserSchema.fetchAllUser = object()
   .shape({
-    search: string().typeError('Search Value Should Be String!'),
-    page: number().typeError('Page Must be Number!').optional(),
-    limit: number()
-      .typeError('Limit must be a number')
-      .optional()
-      .max(500, 'Limit cannot exceed 500'),
+    search: string().typeError('Search Value Should Be String'),
+    page: string().optional().matches(numberExp, 'Invalid Page'),
+    limit: string().optional().matches(numberExp, 'Invalid limit'),
     sortBy: string()
       .optional()
       .oneOf(UserConst.sortOptions, 'Invalid sortBy value'),
@@ -73,7 +71,7 @@ UserSchema.fetchAllUser = object()
       .oneOf(['asc', 'desc'], 'Invalid sortOrder value'),
     // Filter Options
     username: string().typeError('Username Should Be String!').optional(),
-    'address.city': string().typeError('Username Should Be String!').optional(),
+    'address.city': string().optional().matches(alphabetExp, 'Invalid City!'),
     active: string()
       .optional()
       .oneOf(['true', 'false'], 'Invalid Active Value!'),

@@ -2,13 +2,14 @@
 const GlobalConst = {}
 
 GlobalConst.regexp = {
-  password:
+  passwordExp:
     /^.*((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
-  mobile: /(\+088)?-?01[0-9]\d{8}/g,
-  alphabet: /^[A-Z a-z]+$/,
-  email:
+  mobileExp: /(\+088)?-?01[0-9]\d{8}/g,
+  alphabetExp: /^[A-Z a-z]+$/,
+  numberExp: /^[0-9]+$/,
+  emailExp:
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-  objectId: /^[0-9a-fA-F]{24}$/,
+  objectIdExp: /^[0-9a-fA-F]{24}$/,
 }
 
 GlobalConst.supportedMimetypes = {
