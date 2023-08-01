@@ -6,7 +6,7 @@ import config from '../config/index.js'
 
 const PeopleSchema = Schema(
   {
-    role: { type: Types.ObjectId, ref: 'role', required: true },
+    role: { type: Types.ObjectId, ref: 'Role', required: true },
     name: { type: String, required: true },
     email: {
       type: String,

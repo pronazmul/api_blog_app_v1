@@ -17,6 +17,8 @@ import RoleModel from '../models/Role.model.js'
 
 // Demo Data
 import DummyData from './data.js'
+import RoleConst from '../consts/role.const.js'
+import UserConst from '../consts/user.const.js'
 const {
   users,
   blogs,
@@ -45,15 +47,22 @@ const importData = async () => {
     await RoleModel.deleteMany()
 
     //Import Data
-    await UserModel.create(users)
-    await BlogModel.create(blogs)
-    await CategoryModel.create(categories)
-    await CommentModel.create(comments)
-    await FollowerModel.create(followers)
-    await LikeModel.create(likes)
-    await TagModel.create(tags)
-    await NotificationModel.create(notifications)
-    await RoleModel.create(roles)
+    // let roles = await RoleModel.insertMany(RoleConst.rolesData)
+    // let roleIds = roles.map((r) => r._id)
+
+    // let users = await UserModel.insertMany(
+    //   UserConst.userData.map((u) => ({ ...u, role: roleIds[0] }))
+    // )
+
+    await UserModel.insertMany(users)
+    await BlogModel.insertMany(blogs)
+    await CategoryModel.insertMany(categories)
+    await CommentModel.insertMany(comments)
+    await FollowerModel.insertMany(followers)
+    await LikeModel.insertMany(likes)
+    await TagModel.insertMany(tags)
+    await NotificationModel.insertMany(notifications)
+    await RoleModel.insertMany(roles)
 
     console.log('Data Inserted')
     process.exit()

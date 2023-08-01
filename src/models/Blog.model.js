@@ -4,7 +4,11 @@ import { Schema, model, Types } from 'mongoose'
 const BlogSchema = Schema(
   {
     user: { type: Types.ObjectId, ref: 'People', required: true },
-    category: { type: Types.ObjectId, ref: 'Category', required: true },
+    category: {
+      type: Types.ObjectId,
+      ref: 'Category.subCategories',
+      required: true,
+    },
     tags: [{ type: Types.ObjectId, ref: 'Tag' }],
     title: { type: String },
     content: { type: String },

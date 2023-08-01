@@ -22,7 +22,6 @@ UserService.findOneById = async (id) => {
     let query = { _id: id }
     let projection = { password: 0, createdAt: 0, updatedAt: 0 }
     let user = await UserModel.findById(query, projection).populate('role')
-    // let role = await RoleModel.findById({ _id: user.role })
     return user
   } catch (error) {
     throw error
@@ -42,6 +41,7 @@ UserService.find = async (reqQuery) => {
   const projection = { password: 0 }
   try {
     const users = await UserModel.find(query, projection)
+      .populate('role')
       .sort(sort)
       .skip(skip)
       .limit(limit)

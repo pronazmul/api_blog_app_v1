@@ -1,3 +1,4 @@
+import { Types } from 'mongoose'
 import UserConst from '../consts/user.const.js'
 import GlobalUtils from '../utils/global.utils.js'
 import MongooseUtils from '../utils/mongoose.utils.js'
@@ -20,9 +21,10 @@ BlogService.findOneById = async (id) => {
   try {
     let query = { _id: id }
     let projection = { password: 0, createdAt: 0, updatedAt: 0 }
-    let result = await BlogModel.findById(query, projection).populate('user')
-    // .populate('category')
-    // .populate('tags')
+    let result = await BlogModel.findById(query, projection)
+      .populate('user')
+      .populate('tags')
+
     return result
   } catch (error) {
     throw error
@@ -40,12 +42,66 @@ BlogService.find = async (reqQuery) => {
   )
   const sort = { [sortBy]: sortOrder }
   const projection = { password: 0 }
+
+  // Pipeline
+  let pipeline = [
+    { $match: query },
+    {
+      $lookup: {
+        from: 'peoples',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'user',
+      },
+    },
+    { $unwind: '$user' },
+    {
+      $lookup: {
+        from: 'tags',
+        localField: 'tags',
+        foreignField: '_id',
+        as: 'tags',
+      },
+    },
+    {
+      $lookup: {
+        from: 'categories',
+        localField: 'category',
+        foreignField: 'subCategories._id',
+        as: 'category',
+      },
+    },
+    {
+      $unwind: '$category',
+    },
+    {
+      $unwind: '$category.subCategories',
+    },
+    {
+      match: {
+        'category.subCategories._id': Types.ObjectId(query.category),
+      },
+    },
+    {
+      $sort: sort,
+    },
+    {
+      $skip: skip,
+    },
+    { $limit: limit },
+  ]
+
   try {
-    const result = await BlogModel.find(query, projection)
-      .populate('user')
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
+    const result = await BlogModel.aggregate(pipeline)
+
+    // const result = await BlogModel.find(query, projection)
+    //   .populate('user')
+    //   .populate('tags')
+    //   .populate('category')
+    //   .sort(sort)
+    //   .skip(skip)
+    //   .limit(limit)
+
     const total = await BlogModel.countDocuments(query)
     return { data: result, meta: { page, limit, total } }
   } catch (error) {
