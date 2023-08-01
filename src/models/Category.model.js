@@ -3,16 +3,9 @@ import { Schema, model } from 'mongoose'
 
 const CategorySchema = Schema(
   {
-    title: { type: String },
+    name: { type: String },
     description: { type: String },
     image: { type: String },
-    subCategories: [
-      {
-        name: String,
-        image: String,
-        description: String,
-      },
-    ],
   },
   { timestamps: true, versionKey: false }
 )

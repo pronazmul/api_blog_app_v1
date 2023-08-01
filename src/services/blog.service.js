@@ -66,8 +66,17 @@ BlogService.find = async (reqQuery) => {
     {
       $lookup: {
         from: 'categories',
-        localField: 'category',
-        foreignField: 'subCategories._id',
+        let: { categoryId: '$category' }, // Define a variable to hold the 'category' field value
+        pipeline: [
+          {
+            $unwind: '$subCategories', // Unwind the 'subCategories' array
+          },
+          {
+            $match: {
+              $expr: { $eq: ['$$categoryId', '$subCategories._id'] }, // Match the specific subcategory _id
+            },
+          },
+        ],
         as: 'category',
       },
     },

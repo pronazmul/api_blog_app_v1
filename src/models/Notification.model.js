@@ -4,7 +4,9 @@ import { Schema, model, Types } from 'mongoose'
 const NotificationSchema = Schema(
   {
     user: { type: Types.ObjectId, ref: 'People', required: true },
+    blog: { type: Types.ObjectId, ref: 'Blog' },
     content: { type: String, required: true },
+    type: { type: String, enum: ['blog'], default: 'blog' },
     readStatus: { type: Boolean, default: false },
   },
   { timestamps: true, versionKey: false }
