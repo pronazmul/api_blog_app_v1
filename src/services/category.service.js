@@ -1,7 +1,8 @@
 import UserConst from '../consts/user.const.js'
 import GlobalUtils from '../utils/global.utils.js'
 import MongooseUtils from '../utils/mongoose.utils.js'
-import CategoryModel from '../models/Category.model.js'
+// import CategoryModel from '../models/Category.model.js'
+import CategoryModel from '../models/Subcategory.model.js'
 
 // Initialize Module
 const CategoryService = {}
@@ -42,7 +43,7 @@ CategoryService.find = async (reqQuery) => {
   const projection = { password: 0 }
   try {
     const result = await CategoryModel.find(query, projection)
-      // .populate('user')
+      .populate('category')
       .sort(sort)
       .skip(skip)
       .limit(limit)

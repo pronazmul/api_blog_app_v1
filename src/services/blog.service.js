@@ -23,6 +23,8 @@ BlogService.findOneById = async (id) => {
     let projection = { password: 0, createdAt: 0, updatedAt: 0 }
     let result = await BlogModel.findById(query, projection)
       .populate('user')
+      .populate('category')
+      .populate('subcategory')
       .populate('tags')
 
     return result
@@ -43,77 +45,20 @@ BlogService.find = async (reqQuery) => {
   const sort = { [sortBy]: sortOrder }
   const projection = { password: 0 }
 
-  // Pipeline
-  let pipeline = [
-    { $match: query },
-    {
-      $lookup: {
-        from: 'peoples',
-        localField: 'user',
-        foreignField: '_id',
-        as: 'user',
-      },
-    },
-    { $unwind: '$user' },
-    {
-      $lookup: {
-        from: 'tags',
-        localField: 'tags',
-        foreignField: '_id',
-        as: 'tags',
-      },
-    },
-    {
-      $lookup: {
-        from: 'categories',
-        let: { categoryId: '$category' }, // Define a variable to hold the 'category' field value
-        pipeline: [
-          {
-            $unwind: '$subCategories', // Unwind the 'subCategories' array
-          },
-          {
-            $match: {
-              $expr: { $eq: ['$$categoryId', '$subCategories._id'] }, // Match the specific subcategory _id
-            },
-          },
-        ],
-        as: 'category',
-      },
-    },
-    {
-      $unwind: '$category',
-    },
-    {
-      $unwind: '$category.subCategories',
-    },
-    {
-      match: {
-        'category.subCategories._id': Types.ObjectId(query.category),
-      },
-    },
-    {
-      $sort: sort,
-    },
-    {
-      $skip: skip,
-    },
-    { $limit: limit },
-  ]
-
   try {
-    const result = await BlogModel.aggregate(pipeline)
-
-    // const result = await BlogModel.find(query, projection)
-    //   .populate('user')
-    //   .populate('tags')
-    //   .populate('category')
-    //   .sort(sort)
-    //   .skip(skip)
-    //   .limit(limit)
+    const result = await BlogModel.find(query, projection)
+      .populate('user')
+      .populate('category')
+      .populate('subcategory')
+      .populate('tags')
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
 
     const total = await BlogModel.countDocuments(query)
     return { data: result, meta: { page, limit, total } }
   } catch (error) {
+    console.log({ error })
     throw error
   }
 }

@@ -7,9 +7,8 @@ const BlogSchema = Schema(
     category: {
       type: Types.ObjectId,
       ref: 'Category',
-      required: true,
     },
-    subCategory: {
+    subcategory: {
       type: Types.ObjectId,
       ref: 'SubCategory',
     },

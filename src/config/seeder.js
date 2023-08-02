@@ -25,79 +25,90 @@ const importData = async () => {
     //Destroy All
     await UserModel.deleteMany()
     await SessionModel.deleteMany()
-    await BlogModel.deleteMany()
     await CategoryModel.deleteMany()
     await SubCategoryModel.deleteMany()
+    await TagModel.deleteMany()
+    await BlogModel.deleteMany()
     await CommentModel.deleteMany()
     await FollowerModel.deleteMany()
     await LikeModel.deleteMany()
-    await TagModel.deleteMany()
     await NotificationModel.deleteMany()
     await RoleModel.deleteMany()
 
-    //Import Data
-    let roles = DummyData.roles.map((r) => new RoleModel(r))
-    let users = DummyData.users.map(
-      (u) =>
+    //Write Roles Data
+    let roles = []
+    DummyData.roles.forEach((r) => roles.push(new RoleModel(r)))
+
+    // Write Users
+    let users = []
+    DummyData.users.forEach((u) =>
+      users.push(
         new UserModel({
           ...u,
           role: GlobalUtils.randomSingleFromArray(roles.map((r) => r._id)),
         })
+      )
     )
 
     // Wirte Categories
-    let subCategories = []
-    let categories = DummyData.categories.map((c) => {
-      let category = new CategoryModel({
-        name: c.name,
-        description: c.description,
-        image: c.image,
-      })
-
-      subCategories = [
-        ...subCategories,
-        ...c.subCategories.map(
-          (sub) =>
-            new SubCategoryModel({
-              category: category._id,
-              name: sub.name,
-              image: sub.image,
-              description: sub.description,
-            })
-        ),
-      ]
-      return category
+    let categories = []
+    DummyData.categories.forEach((c) => {
+      categories.push(
+        new CategoryModel({
+          name: c.name,
+          description: c.description,
+          image: c.image,
+        })
+      )
     })
-    // Write Tags
-    let tags = DummyData.tags.map((t) => new TagModel({ name: t.name }))
 
-    // Write Blogs && Update Tags Count
+    // Write SubCategories
+    let subCategories = []
+    categories.forEach((cat) => {
+      let subs = DummyData.categories.filter((c) => c.name === cat.name)[0]
+      subCategories.push(
+        new SubCategoryModel({
+          category: cat._id,
+          name: subs.description,
+          description: subs.description,
+          image: subs.image,
+        })
+      )
+    })
+
+    // Write Tags
+    let tags = []
+    DummyData.tags.forEach((t) => tags.push(new TagModel({ name: t.name })))
+
+    // Write Blogs && Update used Tags Count
     let blogs = []
     DummyData.blogs.forEach((b) => {
+      let selectedCate = GlobalUtils.randomSingleFromArray(subCategories)
+      let selectedTags = GlobalUtils.randomMultipleFromArray(
+        tags.map((t) => t._id),
+        3
+      )
+
       let blog = new BlogModel({
         ...b,
         user: GlobalUtils.randomSingleFromArray(users)._id,
-        category: GlobalUtils.randomSingleFromArray(categories)._id,
-        subCategory: GlobalUtils.randomSingleFromArray(subCategories)._id,
-        tags: GlobalUtils.randomMultipleFromArray(
-          tags.map((t) => t._id),
-          3
-        ),
+        category: selectedCate.category,
+        subcategory: selectedCate._id,
+        tags: selectedTags,
       })
 
       // Update Tags Count
       tags = tags.map((t) => {
-        if (blog.tags.includes(t._id)) {
+        if (selectedTags.includes(t._id)) {
           t.blogCount = t.blogCount + 1
           return t
         } else {
           return t
         }
       })
+
       blogs.push(blog)
     })
-
-    // console.log(tags)
 
     // Write Comments
     let comments = []
@@ -149,7 +160,7 @@ const importData = async () => {
       })
     })
 
-    // Write Likes And Blogs
+    // Write Likes And Notifications
     let likes = []
     let notifications = []
     blogs.forEach((b) => {
@@ -174,13 +185,14 @@ const importData = async () => {
 
     await RoleModel.insertMany(roles)
     await UserModel.insertMany(users)
-    await BlogModel.insertMany(blogs)
     await CategoryModel.insertMany(categories)
     await SubCategoryModel.insertMany(subCategories)
+    await TagModel.insertMany(tags)
+
+    await BlogModel.insertMany(blogs)
     await CommentModel.insertMany(comments)
     await FollowerModel.insertMany(followers)
     await LikeModel.insertMany(likes)
-    await TagModel.insertMany(tags)
     await NotificationModel.insertMany(notifications)
 
     // --------------
@@ -199,13 +211,13 @@ const destroyData = async () => {
     //Destroy All
     await UserModel.deleteMany()
     await SessionModel.deleteMany()
-    await BlogModel.deleteMany()
     await CategoryModel.deleteMany()
     await SubCategoryModel.deleteMany()
+    await TagModel.deleteMany()
+    await BlogModel.deleteMany()
     await CommentModel.deleteMany()
     await FollowerModel.deleteMany()
     await LikeModel.deleteMany()
-    await TagModel.deleteMany()
     await NotificationModel.deleteMany()
     await RoleModel.deleteMany()
 
