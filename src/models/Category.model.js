@@ -3,7 +3,7 @@ import { Schema, model } from 'mongoose'
 
 const CategorySchema = Schema(
   {
-    name: { type: String },
+    name: { type: String, required: true },
     description: { type: String },
     image: { type: String },
   },

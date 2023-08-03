@@ -48,9 +48,9 @@ BlogService.find = async (reqQuery) => {
   try {
     const result = await BlogModel.find(query, projection)
       .populate('user')
-      .populate('category')
       .populate('subcategory')
       .populate('tags')
+      .populate('category')
       .sort(sort)
       .skip(skip)
       .limit(limit)

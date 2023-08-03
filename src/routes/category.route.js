@@ -48,5 +48,11 @@ router.get(
   CategoryController.find
 )
 
+router.post(
+  '/',
+  // validateRequest(UserSchema.fetchAllUser),
+  CategoryController.create
+)
+
 // Exports
 export default router

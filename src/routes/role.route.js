@@ -48,5 +48,11 @@ router.get(
   RoleController.find
 )
 
+router.post(
+  '/',
+  // validateRequest(UserSchema.fetchAllUser),
+  RoleController.create
+)
+
 // Exports
 export default router

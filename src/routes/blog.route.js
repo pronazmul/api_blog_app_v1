@@ -47,6 +47,17 @@ router.get(
   // validateRequest(UserSchema.fetchAllUser),
   BlogController.find
 )
+/**
+ * @description Retrive All Data
+ * @Route [GET]- /api/blogs?search=khulna&page=2&limit=1&sortBy=name&sortOrder=desc&username=nazmul&address.city=nazmul&active=true&abcd=fksdfj
+ * @Access protected - []
+ * @returns {Array} - All Filtered Data Array
+ */
+router.post(
+  '/',
+  // validateRequest(UserSchema.fetchAllUser),
+  BlogController.create
+)
 
 // Exports
 export default router

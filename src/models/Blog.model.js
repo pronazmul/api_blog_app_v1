@@ -1,5 +1,6 @@
 // Required Packeges
-import { Schema, model, Types } from 'mongoose'
+import mongoose, { Schema, model, Types } from 'mongoose'
+import CategoryModel from './Category.model.js'
 
 const BlogSchema = Schema(
   {
@@ -21,6 +22,10 @@ const BlogSchema = Schema(
   },
   { timestamps: true, versionKey: false }
 )
+
+if (!mongoose.models.Category) {
+  model('Category', CategoryModel.schema)
+}
 
 // Make Model
 const BlogModel = model('Blog', BlogSchema)

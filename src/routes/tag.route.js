@@ -48,5 +48,11 @@ router.get(
   TagController.find
 )
 
+router.post(
+  '/',
+  // validateRequest(UserSchema.fetchAllUser),
+  TagController.create
+)
+
 // Exports
 export default router
