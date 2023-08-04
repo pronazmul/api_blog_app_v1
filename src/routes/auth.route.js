@@ -34,7 +34,7 @@ router.put('/sessions/:sessionId', authenticate, AuthController.deactiveSession)
  */
 router.post(
   '/register',
-  // validateRequest(UserSchema.create),
+  validateRequest(UserSchema.create),
   AuthController.register
 )
 /**

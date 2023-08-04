@@ -74,4 +74,13 @@ RoleService.deleteOneById = async (id) => {
   }
 }
 
+RoleService.count = async () => {
+  try {
+    let result = await RoleModel.countDocuments()
+    return result
+  } catch (error) {
+    throw error
+  }
+}
+
 export default RoleService

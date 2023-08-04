@@ -1,32 +1,74 @@
-import { object, string, ref, array, number } from 'yup'
+import { object, string, date, ref, array, number } from 'yup'
 import GlobalConst from '../consts/global.const.js'
 import UserConst from '../consts/user.const.js'
 
-const { emailExp, mobileExp, passwordExp, alphabetExp, numberExp } =
-  GlobalConst.regexp
+const {
+  emailExp,
+  mobileExp,
+  passwordExp,
+  alphabetExp,
+  numberExp,
+  usernameExp,
+  postCodeExp,
+} = GlobalConst.regexp
 
 // Initialize Module
 const UserSchema = {}
+UserSchema.login = object()
+  .shape({
+    email: string()
+      .matches(emailExp, 'Invalid Email')
+      .required('Email is Required!'),
+    password: string()
+      .matches(passwordExp, 'Invalid Password')
+      .required('Password Is Required!'),
+  })
+  .strict()
+  .noUnknown()
 
-UserSchema.create = object().shape({
-  name: string().required('Name is Required!'),
-  email: string()
-    .matches(emailExp, 'Invalid Email Address!')
-    .required('Email is Required!'),
-  phone: string().optional().matches(mobileExp, 'Invalid phone Number!'),
-  password: string()
-    .matches(passwordExp, 'Invalid Password!')
-    .required('Password Is Required!'),
-})
-
-UserSchema.login = object().shape({
-  email: string()
-    .matches(emailExp, 'Authentication Failed')
-    .required('Email is Required!'),
-  password: string()
-    .matches(passwordExp, 'Authentication Failed')
-    .required('Password Is Required!'),
-})
+UserSchema.create = object()
+  .shape({
+    name: string()
+      .matches(alphabetExp, 'Name should be alplabet only!')
+      .required('Name is Required!'),
+    email: string()
+      .matches(emailExp, 'Invalid Email Address!')
+      .required('Email is Required!'),
+    password: string()
+      .matches(
+        passwordExp,
+        'Password must be at least 8 characters long and contain letters, numbers, and special characters!'
+      )
+      .required('Password Is Required!'),
+    username: string()
+      .matches(
+        usernameExp,
+        'Username must be at least 6 char long and contain letters or numbers only!'
+      )
+      .required('Username is Required!'),
+    phone: string().optional().matches(mobileExp, 'Invalid phone Number!'),
+    dob: string()
+      .nullable()
+      .test('is-valid-date', 'Invalid Date of Birth!', (value) => {
+        if (!value) return true // Return true if the date is null or not provided
+        return !isNaN(Date.parse(value)) // Return true if the date string is a valid ISO 8601 date
+      })
+      .transform((value, originalValue) =>
+        originalValue ? new Date(originalValue) : null
+      ),
+    bio: string().optional().typeError('Bio should Be String!'),
+    address: object().shape({
+      postCode: string()
+        .optional()
+        .matches(postCodeExp, 'Must be number and 4 digit only!'),
+      city: string().optional().matches(alphabetExp, 'Must be Alphabet Only!'),
+      country: string()
+        .optional()
+        .matches(alphabetExp, 'Must be Alphabet Only!'),
+    }),
+  })
+  .strict()
+  .noUnknown()
 
 UserSchema.update = object().shape({
   name: string().optional(),
@@ -52,10 +94,6 @@ UserSchema.updatePassword = object().shape({
       password ? field.required() : field
     )
     .oneOf([ref('newPassword')], 'Password does not matched'),
-})
-
-UserSchema.updateRole = object().shape({
-  roles: array().typeError('Roles must be array'),
 })
 
 UserSchema.fetchAllUser = object()

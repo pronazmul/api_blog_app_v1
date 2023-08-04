@@ -183,17 +183,17 @@ const importData = async () => {
         })
     })
 
-    await RoleModel.insertMany(roles)
-    await UserModel.insertMany(users)
-    await CategoryModel.insertMany(categories)
-    await SubCategoryModel.insertMany(subCategories)
-    await TagModel.insertMany(tags)
+    await RoleModel.create(roles)
+    await UserModel.create(users)
+    await CategoryModel.create(categories)
+    await SubCategoryModel.create(subCategories)
+    await TagModel.create(tags)
 
-    await BlogModel.insertMany(blogs)
-    await CommentModel.insertMany(comments)
-    await FollowerModel.insertMany(followers)
-    await LikeModel.insertMany(likes)
-    await NotificationModel.insertMany(notifications)
+    await BlogModel.create(blogs)
+    await CommentModel.create(comments)
+    await FollowerModel.create(followers)
+    await LikeModel.create(likes)
+    await NotificationModel.create(notifications)
 
     // --------------
 

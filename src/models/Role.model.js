@@ -3,8 +3,8 @@ import { Schema, model } from 'mongoose'
 
 const RoleSchema = Schema(
   {
-    name: String,
-    permissions: [{ type: String }],
+    name: { type: String, required: true, unique: true },
+    permissions: [{ type: String, required: true }],
     description: String,
     active: { type: Boolean, default: true },
   },

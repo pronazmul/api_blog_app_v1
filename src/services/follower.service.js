@@ -42,7 +42,8 @@ FollowerService.find = async (reqQuery) => {
   const projection = { password: 0 }
   try {
     const result = await FollowerModel.find(query, projection)
-      // .populate('user')
+      .populate('follower')
+      .populate('following')
       .sort(sort)
       .skip(skip)
       .limit(limit)

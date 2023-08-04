@@ -1,0 +1,66 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\prona\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add date-fns
+
+PATH: 
+  C:\Users\prona\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\prona\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Windows\System32\OpenSSH;C:\Program Files\Git\cmd;C:\Program Files\MongoDB\Server\6.0\bin;C:\Users\prona\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\xampp\php;C:\ProgramData\ComposerSetup\bin;C:\Program Files (x86)\Microsoft SQL Server\160\Tools\Binn;C:\Program Files\Microsoft SQL Server\160\Tools\Binn;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn;C:\Program Files\Microsoft SQL Server\160\DTS\Binn;C:\Program Files (x86)\Microsoft SQL Server\160\DTS\Binn;C:\Program Files\Azure Data Studio\bin;C:\Program Files\PuTTY;C:\Program Files\TortoiseGit\bin;C:\Users\prona\AppData\Local\Microsoft\WindowsApps;C:\Users\prona\AppData\Roaming\npm;C:\Users\prona\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\prona\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\prona\AppData\Roaming\Composer\vendor\bin;C:\Program Files\Azure Data Studio\bin;C:\ffmpeg\bin;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  18.12.1
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: EPERM: operation not permitted, unlink 'I:\Projects\Express APIs\blog-api-v1\node_modules\bcrypt\lib\binding\napi-v3\bcrypt_lib.node'
+
+npm manifest: 
+  {
+    "name": "mern-blog",
+    "version": "1.0.0",
+    "description": "Blog Application",
+    "type": "module",
+    "main": "app.js",
+    "scripts": {
+      "start": "NODE_ENV=production node app.js",
+      "dev": "NODE_ENV=development nodemon app.js",
+      "data:import": "node src/config/seeder",
+      "data:destroy": "node src/config/seeder -d",
+      "data:test": "node _temp"
+    },
+    "author": "Nazmul Huda",
+    "license": "ISC",
+    "dependencies": {
+      "axios": "^0.27.2",
+      "bcrypt": "^5.0.1",
+      "colors": "^1.4.0",
+      "cookie-parser": "^1.4.6",
+      "cors": "^2.8.5",
+      "date-fns": "^2.30.0",
+      "dotenv": "^10.0.0",
+      "express": "^4.17.2",
+      "express-rate-limit": "^6.0.5",
+      "http-errors": "^2.0.0",
+      "jsonwebtoken": "^8.5.1",
+      "mongoose": "^6.1.7",
+      "mongoose-unique-validator": "^3.0.0",
+      "morgan": "^1.10.0",
+      "multer": "^1.4.4",
+      "node-device-detector": "^2.0.8",
+      "sharp": "^0.30.3",
+      "winston": "^3.9.0",
+      "winston-daily-rotate-file": "^4.7.1",
+      "yup": "^0.32.11"
+    },
+    "devDependencies": {
+      "@types/sharp": "^0.32.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

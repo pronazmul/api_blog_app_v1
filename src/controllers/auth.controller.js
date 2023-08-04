@@ -5,6 +5,7 @@ import GlobalUtils from './../utils/global.utils.js'
 import UserService from '../services/user.service.js'
 import SessionService from '../services/session.service.js'
 import AuthService from '../services/auth.service.js'
+import UserConst from '../consts/user.const.js'
 
 const { detectDevice } = AuthUtils
 
@@ -13,18 +14,13 @@ const AuthController = {}
 
 AuthController.register = async (req, res, next) => {
   try {
-    let body = GlobalUtils.fieldsFromObject(req.body, [
-      'name',
-      'email',
-      'password',
-      'mobile',
-      'dob',
-    ])
+    let body = GlobalUtils.fieldsFromObject(req.body, UserConst.createFields)
     let user = await UserService.create(body)
     let session = SessionService.create({
       user: user?._id,
       userAgent: detectDevice(req.headers['user-agent']),
     })
+
     let accessToken = AuthUtils.jwtSign({ user: user, session })
     let refreshToken = AuthUtils.jwtSign({ session }, config.refresh_token)
     res.cookie('accessToken', accessToken, {

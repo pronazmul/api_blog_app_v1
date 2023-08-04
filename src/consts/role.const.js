@@ -26,14 +26,12 @@ RoleConst.rolesData = [
   {
     name: 'moderator',
     permissions: [
+      'manage_users',
       'manage_blogs',
+      'manage_tags',
       'manage_comments',
-      'moderate_likes',
-      'moderate_followers',
-      'manage_notifications',
     ],
-    description:
-      'Ability to manage blogs, comments, likes, followers, and notifications.',
+    description: 'Ability to manage users,blogs and comments',
   },
   {
     name: 'contributor',

@@ -1,6 +1,16 @@
 // Initialize Module
 const UserConst = {}
 
+UserConst.createFields = [
+  'name',
+  'email',
+  'password',
+  'username',
+  'phone',
+  'dob',
+  'address',
+]
+
 UserConst.searchOptions = ['name', 'bio', 'username', 'address.city']
 UserConst.sortOptions = [
   'name',

@@ -4,14 +4,21 @@ import createError from 'http-errors'
 // Internal Modules:
 import GlobalUtils from '../utils/global.utils.js'
 import RoleService from '../services/role.service.js'
+import RoleConst from './../consts/role.const.js'
 
 // Initialize Module
 const RoleController = {}
 
 RoleController.create = async (req, res, next) => {
   try {
-    let data = await RoleService.create(req.body)
-    let response = GlobalUtils.fromatResponse(data, 'Blog Create Success!')
+    // Check If Roles is already Available no roles will be inserted else inserted
+    let existedRoles = await RoleService.count()
+    if (existedRoles) next(createError(500, 'Roles Already Existed!'))
+    let data = await RoleService.create(RoleConst.rolesData)
+    let response = GlobalUtils.fromatResponse(
+      data,
+      'Roles Created Successfully!'
+    )
     res.status(200).json(response)
   } catch (error) {
     next(createError(500, error))
