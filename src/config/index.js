@@ -15,5 +15,7 @@ export default {
   __dirname: process.cwd(),
   filePath: join(process.cwd(), 'public'),
   user_directory: process.env.USER_DIRECTORY,
+  category_directory: process.env.CATEGORY_DIRECTORY,
+  blog_directory: process.env.BLOG_DIRECTORY,
   default_upload_file_size: process.env.DEFAULT_UPLOAD_FILE_SIZE,
 }

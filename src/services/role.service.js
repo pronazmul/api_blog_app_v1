@@ -2,6 +2,7 @@ import UserConst from '../consts/user.const.js'
 import GlobalUtils from '../utils/global.utils.js'
 import MongooseUtils from '../utils/mongoose.utils.js'
 import RoleModel from '../models/Role.model.js'
+import RoleConst from '../consts/role.const.js'
 
 // Initialize Module
 const RoleService = {}
@@ -77,6 +78,15 @@ RoleService.deleteOneById = async (id) => {
 RoleService.count = async () => {
   try {
     let result = await RoleModel.countDocuments()
+    return result
+  } catch (error) {
+    throw error
+  }
+}
+
+RoleService.default = async () => {
+  try {
+    let result = await RoleModel.findOne({ name: RoleConst.defaultRole }, '_id')
     return result
   } catch (error) {
     throw error

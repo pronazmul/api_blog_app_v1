@@ -48,7 +48,7 @@ GlobalUtils.fieldsFromObject = (obj, fields) => {
  * @param {string} [options.sortOrder='desc'] - The sort order for the results (optional).
  * @returns {object} - The pagination values including page, limit, skip, sortBy, and sortOrder.
  */
-GlobalUtils.calculatePagination = (options) => {
+GlobalUtils.calculatePagination = (options = {}) => {
   const page = Number(options?.page || 1)
   const limit = Number(options?.limit || 10)
   const skip = (page - 1) * limit

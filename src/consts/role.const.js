@@ -6,6 +6,8 @@ RoleConst.searchOptions = ['name', 'city']
 RoleConst.filterOptions = ['age', 'roles', 'status', 'city']
 RoleConst.sortOptions = []
 
+RoleConst.defaultRole = 'user'
+
 RoleConst.rolesData = [
   {
     name: 'admin',
@@ -34,7 +36,7 @@ RoleConst.rolesData = [
     description: 'Ability to manage users,blogs and comments',
   },
   {
-    name: 'contributor',
+    name: 'user',
     permissions: [
       'create_edit_own_blogs',
       'manage_tags',
@@ -44,16 +46,6 @@ RoleConst.rolesData = [
     ],
     description:
       'Ability to create and edit their own blogs. Can manage tags, comment on blogs, like blogs, and follow other users.',
-  },
-  {
-    name: 'guest',
-    permissions: [
-      'view_blogs',
-      'view_categories',
-      'view_tags',
-      'view_comments',
-    ],
-    description: 'Can view blogs, categories, tags, and comments.',
   },
 ]
 

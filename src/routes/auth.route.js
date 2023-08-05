@@ -37,6 +37,7 @@ router.post(
   validateRequest(UserSchema.create),
   AuthController.register
 )
+
 /**
  * @description User Login
  * @Route [POST]- /api/auth/login
@@ -44,6 +45,7 @@ router.post(
  * @returns {Object} - Logged in User.
  */
 router.post('/login', validateRequest(UserSchema.login), AuthController.login)
+
 /**
  * @description Logout User
  * @Route [POST]- /api/users/auth/logout
@@ -51,6 +53,7 @@ router.post('/login', validateRequest(UserSchema.login), AuthController.login)
  * @returns {Object} - logout
  */
 router.get('/logout', authenticate, AuthController.logout)
+
 /**
  * @description Retrive Logged User Information
  * @Route [GET]- /api/auth/login_info

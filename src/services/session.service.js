@@ -1,3 +1,6 @@
+import SessionConst from '../consts/session.const.js'
+import GlobalUtils from '../utils/global.utils.js'
+import MongooseUtils from '../utils/mongoose.utils.js'
 import SessionModel from './../models/Session.model.js'
 
 const SessionService = {}
@@ -12,12 +15,22 @@ SessionService.create = async (payload) => {
   }
 }
 
-SessionService.activeSessions = async (userId) => {
+SessionService.activeSessions = async (reqQuery) => {
   try {
-    let query = { user: userId, valid: true }
-    let sort = { updatedAt: -1 }
-    let data = await SessionModel.find(query).sort(sort).lean()
-    return data
+    const { page, limit, skip, sortBy, sortOrder } =
+      GlobalUtils.calculatePagination(reqQuery)
+
+    const query = MongooseUtils.searchCondition(
+      reqQuery,
+      SessionConst.searchOptions,
+      SessionConst.filterOptions
+    )
+    const sort = { [sortBy]: sortOrder }
+
+    let data = await SessionModel.find(query).sort(sort).skip(skip).limit(limit)
+    const total = await SessionModel.countDocuments(query)
+
+    return { data: data, meta: { page, limit, total } }
   } catch (error) {
     throw error
   }
@@ -25,12 +38,11 @@ SessionService.activeSessions = async (userId) => {
 
 SessionService.deactivateSession = async (sessionId) => {
   try {
-    console.log({ sessionId })
     let query = { _id: sessionId }
     let modified = { valid: false }
-    let options = { new: true }
+    let options = { new: true, select: '_id' }
     const data = await SessionModel.findOneAndUpdate(query, modified, options)
-    console.log({ data })
+
     return data
   } catch (error) {
     throw error

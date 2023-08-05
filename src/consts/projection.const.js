@@ -2,6 +2,9 @@
 const ProjectionConst = {}
 
 ProjectionConst.userAuth =
-  'name email username phone dob bio avatar followers following address active role'
+  'role name email username password avatar phone dob bio followers following address active'
+ProjectionConst.user =
+  'role name email username avatar phone dob bio followers following address active'
+ProjectionConst.role = 'name permissions description'
 
 export default ProjectionConst

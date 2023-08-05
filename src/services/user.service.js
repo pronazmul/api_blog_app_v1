@@ -7,16 +7,6 @@ import UserModel from './../models/People.model.js'
 // Initialize Module
 const UserService = {}
 
-UserService.create = async (payload) => {
-  try {
-    let newUser = new UserModel(payload)
-    let user = await newUser.save()
-    return user
-  } catch (error) {
-    throw error
-  }
-}
-
 UserService.findOneById = async (id) => {
   try {
     let query = { _id: id }

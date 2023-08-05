@@ -48,29 +48,13 @@ PeopleSchema.pre('save', async function (next) {
   this.password = await hash(this.password, 10)
 })
 
-PeopleSchema.methods.getUserInfo = async function () {
-  return {
-    _id: this?._id,
-    name: this?.name,
-    email: this?.email,
-    username: this?.username,
-    phone: this?.phone,
-    dob: this?.roles,
-    bio: this?.bio,
-    avatar: this?.avatar,
-    followers: this?.followers,
-    following: this?.following,
-    address: this?.address,
-    active: this?.active,
-  }
-}
-
 // Post-middleware function
 PeopleSchema.post(/^find|^findOne|^findById/, function (docs, next) {
   // Check the response is object
   if (typeof docs === 'object' && !Array.isArray(docs) && docs?.avatar) {
     docs.avatar = `${config.server_url}/${config.user_directory}/${docs.avatar}`
   }
+
   // Check IF the response is object
   if (Array.isArray(docs)) {
     let transformedDocs = docs.map((item) => {
