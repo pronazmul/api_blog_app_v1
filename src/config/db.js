@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import config from './../config/index.js'
 import LoggerUtils from '../utils/logger.utils.js'
+import RoleService from '../services/role.service.js'
 
 const { errorLoger, infoLogger } = LoggerUtils
 
@@ -16,6 +17,7 @@ DbConnection.connectMongo = async () => {
       useUnifiedTopology: true,
     }
     await mongoose.connect(config.database_url, OPTIONS)
+    await RoleService.seed()
     infoLogger.info(
       `MongoDB Successfully Connected with ${mongoose.connection.name}`
     )

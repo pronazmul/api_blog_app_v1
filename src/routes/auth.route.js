@@ -5,6 +5,7 @@ import UserSchema from '../schemas/user.schema.js'
 import AuthController from './../controllers/auth.controller.js'
 import AuthMiddleware from './../middlewares/auth.middlewares.js'
 import ValidateMiddleware from './../middlewares/validate.middleware.js'
+import SessionSchema from '../schemas/session.schema.js'
 
 const router = Router()
 const { authenticate } = AuthMiddleware
@@ -16,7 +17,12 @@ const { validateRequest } = ValidateMiddleware
  * @Access Public
  * @returns {Array} - All Active Session
  */
-router.get('/sessions/:userId', authenticate, AuthController.activeSessions)
+router.get(
+  '/sessions/:userId',
+  authenticate,
+  validateRequest(SessionSchema.fetchAll),
+  AuthController.activeSessions
+)
 
 /**
  * @description Deactive Session by Sessin Id

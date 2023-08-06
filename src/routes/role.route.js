@@ -4,9 +4,25 @@ import { Router } from 'express'
 // Middlewares
 import ValidateMiddleware from '../middlewares/validate.middleware.js'
 import RoleController from '../controllers/role.controller.js'
+import RoleSchema from './../schemas/role.schema.js'
 
 const router = Router()
 const { validateRequest } = ValidateMiddleware
+
+/**
+ * @description Activate Role BY ID
+ * @Route [PUT]- /api/roles/active/:id
+ * @Access protected - []
+ * @returns {Object} - Updated Data
+ */
+router.put('/active/:id', RoleController.activate)
+/**
+ * @description Deactive Role BY ID
+ * @Route [PUT]- /api/roles/deactive/:id
+ * @Access protected - []
+ * @returns {Object} - Updated Data
+ */
+router.put('/deactive/:id', RoleController.deactivate)
 
 /**
  * @description Retrive Single Data By ID
@@ -17,42 +33,12 @@ const { validateRequest } = ValidateMiddleware
 router.get('/:id', RoleController.findOneById)
 
 /**
- * @description Update Data BY ID
- * @Route [PUT]- /api/roles/:id
- * @Access protected - []
- * @returns {Object} - Updated Data
- */
-router.put(
-  '/:id',
-  // validateRequest(UserSchema.update),
-  RoleController.updateOneById
-)
-
-/**
- * @description Delete Data By ID
- * @Route [DELETE]- /api/roles/:id
- * @Access protected - []
- * @returns {Object} - Deleted Status.
- */
-router.delete('/:id', RoleController.deleteOneById)
-
-/**
  * @description Retrive All Data
- * @Route [GET]- /api/roles?search=khulna&page=2&limit=1&sortBy=name&sortOrder=desc&username=nazmul&address.city=nazmul&active=true&abcd=fksdfj
+ * @Route [GET]- /api/roles
  * @Access protected - []
  * @returns {Array} - All Filtered Data Array
  */
-router.get(
-  '/',
-  // validateRequest(UserSchema.fetchAllUser),
-  RoleController.find
-)
-
-router.post(
-  '/',
-  // validateRequest(UserSchema.fetchAllUser),
-  RoleController.create
-)
+router.get('/', validateRequest(RoleSchema.fetchAll), RoleController.find)
 
 // Exports
 export default router

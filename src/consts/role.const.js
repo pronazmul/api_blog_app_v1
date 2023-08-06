@@ -2,8 +2,8 @@
 const RoleConst = {}
 
 // Searching | Sorting | Filtering
-RoleConst.searchOptions = ['name', 'city']
-RoleConst.filterOptions = ['age', 'roles', 'status', 'city']
+RoleConst.searchOptions = ['name', 'permissions']
+RoleConst.filterOptions = []
 RoleConst.sortOptions = []
 
 RoleConst.defaultRole = 'user'

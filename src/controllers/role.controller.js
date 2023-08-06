@@ -4,26 +4,9 @@ import createError from 'http-errors'
 // Internal Modules:
 import GlobalUtils from '../utils/global.utils.js'
 import RoleService from '../services/role.service.js'
-import RoleConst from './../consts/role.const.js'
 
 // Initialize Module
 const RoleController = {}
-
-RoleController.create = async (req, res, next) => {
-  try {
-    // Check If Roles is already Available no roles will be inserted else inserted
-    let existedRoles = await RoleService.count()
-    if (existedRoles) next(createError(500, 'Roles Already Existed!'))
-    let data = await RoleService.create(RoleConst.rolesData)
-    let response = GlobalUtils.fromatResponse(
-      data,
-      'Roles Created Successfully!'
-    )
-    res.status(200).json(response)
-  } catch (error) {
-    next(createError(500, error))
-  }
-}
 
 RoleController.findOneById = async (req, res, next) => {
   try {
@@ -43,7 +26,7 @@ RoleController.find = async (req, res, next) => {
     let result = await RoleService.find(req.query)
     let response = GlobalUtils.fromatResponse(
       result?.data,
-      'All Blogs Fetch success',
+      'All Roles Fetch Success',
       result?.meta
     )
     res.status(200).json(response)
@@ -52,24 +35,24 @@ RoleController.find = async (req, res, next) => {
   }
 }
 
-RoleController.updateOneById = async (req, res, next) => {
+RoleController.activate = async (req, res, next) => {
   try {
     let id = req.params.id
-    let data = req.body
-    let result = RoleService.updateOneById(id, data)
-
-    let response = GlobalUtils.fromatResponse(result, 'Blog Update Success!')
+    let result = await RoleService.activateRole(id)
+    console.log({ result })
+    let response = GlobalUtils.fromatResponse(result, 'Role Activated!')
     res.status(200).json(response)
   } catch (error) {
     next(createError(500, error))
   }
 }
 
-RoleController.deleteOneById = async (req, res, next) => {
+RoleController.deactivate = async (req, res, next) => {
   try {
     let id = req.params.id
-    let result = RoleService.deleteOneById(id)
-    let response = GlobalUtils.fromatResponse(result, 'Blog Delete Success')
+    let result = await RoleService.deactivateRole(id)
+
+    let response = GlobalUtils.fromatResponse(result, 'Role Deactivated!')
     res.status(200).json(response)
   } catch (error) {
     next(createError(500, error))

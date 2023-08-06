@@ -1,29 +1,16 @@
-import UserConst from '../consts/user.const.js'
 import GlobalUtils from '../utils/global.utils.js'
 import MongooseUtils from '../utils/mongoose.utils.js'
 import RoleModel from '../models/Role.model.js'
 import RoleConst from '../consts/role.const.js'
+import ProjectionConst from '../consts/projection.const.js'
 
 // Initialize Module
 const RoleService = {}
 
-RoleService.create = async (payload) => {
-  try {
-    let newData = new RoleModel(payload)
-    let result = await newData.save()
-    return result
-  } catch (error) {
-    throw error
-  }
-}
-
 RoleService.findOneById = async (id) => {
   try {
     let query = { _id: id }
-    let projection = { password: 0, createdAt: 0, updatedAt: 0 }
-    let result = await RoleModel.findById(query, projection)
-    // .populate('category')
-    // .populate('tags')
+    let result = await RoleModel.findById(query, ProjectionConst.role)
     return result
   } catch (error) {
     throw error
@@ -33,20 +20,15 @@ RoleService.findOneById = async (id) => {
 RoleService.find = async (reqQuery) => {
   const { page, limit, skip, sortBy, sortOrder } =
     GlobalUtils.calculatePagination(reqQuery)
-
-  const query = MongooseUtils.searchCondition(
-    reqQuery,
-    UserConst.searchOptions,
-    UserConst.filterOptions
-  )
+  const query = MongooseUtils.searchCondition(reqQuery, RoleConst.searchOptions)
   const sort = { [sortBy]: sortOrder }
-  const projection = { password: 0 }
+
   try {
-    const result = await RoleModel.find(query, projection)
-      // .populate('user')
+    const result = await RoleModel.find(query, ProjectionConst.role)
       .sort(sort)
       .skip(skip)
       .limit(limit)
+
     const total = await RoleModel.countDocuments(query)
     return { data: result, meta: { page, limit, total } }
   } catch (error) {
@@ -54,31 +36,37 @@ RoleService.find = async (reqQuery) => {
   }
 }
 
-RoleService.updateOneById = async (id, payload) => {
+RoleService.activateRole = async (id) => {
   try {
-    let query = { _id: id }
-    let options = { new: true, select: 'name email mobile avatar roles' }
+    let query = { _id: id, active: false }
+    let payload = { active: true }
+    let options = { new: true, select: ProjectionConst.role }
     const result = await RoleModel.findOneAndUpdate(query, payload, options)
+    if (!result) throw Error('Failed to Activate!')
     return result
   } catch (error) {
     throw error
   }
 }
 
-RoleService.deleteOneById = async (id) => {
+RoleService.deactivateRole = async (id) => {
   try {
-    let query = { _id: id }
-    let result = await RoleModel.findOneAndDelete(query)
+    let query = { _id: id, active: true }
+    let payload = { active: false }
+    let options = { new: true, select: ProjectionConst.role }
+    const result = await RoleModel.findOneAndUpdate(query, payload, options)
+    if (!result) throw Error('Failed to Deactivate!')
     return result
   } catch (error) {
     throw error
   }
 }
 
-RoleService.count = async () => {
+RoleService.seed = async () => {
   try {
     let result = await RoleModel.countDocuments()
-    return result
+    if (result) return
+    await RoleModel.create(RoleConst.rolesData)
   } catch (error) {
     throw error
   }
