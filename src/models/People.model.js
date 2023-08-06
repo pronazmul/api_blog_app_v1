@@ -44,6 +44,7 @@ PeopleSchema.plugin(uniqueValidator, {
   message: '{VALUE} Already Exists!',
 })
 
+// Pre-Middleware Function
 PeopleSchema.pre('save', async function (next) {
   this.password = await hash(this.password, 10)
 })
@@ -72,6 +73,20 @@ PeopleSchema.post(/^find|^findOne|^findById/, function (docs, next) {
 
   next()
 })
+
+// Static Functions
+PeopleSchema.statics.incrementFollower = function (id) {
+  return this.findOneAndUpdate({ _id: id }, { $inc: { followers: 1 } })
+}
+PeopleSchema.statics.decrementFollower = function (id) {
+  return this.findOneAndUpdate({ _id: id }, { $inc: { followers: -1 } })
+}
+PeopleSchema.statics.incrementFollowing = function (id) {
+  return this.findOneAndUpdate({ _id: id }, { $inc: { following: 1 } })
+}
+PeopleSchema.statics.decrementFollowing = function (id) {
+  return this.findOneAndUpdate({ _id: id }, { $inc: { following: -1 } })
+}
 
 // Make User Modelresult
 const PeopleModel = model('People', PeopleSchema)

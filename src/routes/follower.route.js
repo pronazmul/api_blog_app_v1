@@ -4,48 +4,48 @@ import { Router } from 'express'
 // Middlewares
 import ValidateMiddleware from '../middlewares/validate.middleware.js'
 import FollowerController from '../controllers/follower.controller.js'
+import FollowerSchema from '../schemas/follower.schema.js'
 
 const router = Router()
 const { validateRequest } = ValidateMiddleware
 
 /**
- * @description Retrive Single Data By ID
- * @Route [GET]- /api/followers/:id
+ * @description Follow User
+ * @Route [GET]- /api/followers/follow/:id
  * @Access protected - []
- * @returns {Object} - Single Object
+ * @returns {Obj} - {}
  */
-router.get('/:id', FollowerController.findOneById)
+router.post('/follow/:id', FollowerController.follow)
 
 /**
- * @description Update Data BY ID
- * @Route [PUT]- /api/followers/:id
+ * @description Unfollow User
+ * @Route [GET]- /api/followers/unfollow/:id
  * @Access protected - []
- * @returns {Object} - Updated Data
+ * @returns {Obj} - {}
  */
-router.put(
-  '/:id',
-  // validateRequest(UserSchema.update),
-  FollowerController.updateOneById
-)
+router.post('/unfollow/:id', FollowerController.unfollow)
 
 /**
- * @description Delete Data By ID
- * @Route [DELETE]- /api/followers/:id
- * @Access protected - []
- * @returns {Object} - Deleted Status.
- */
-router.delete('/:id', FollowerController.deleteOneById)
-
-/**
- * @description Retrive All Data
- * @Route [GET]- /api/followers?search=khulna&page=2&limit=1&sortBy=name&sortOrder=desc&username=nazmul&address.city=nazmul&active=true&abcd=fksdfj
+ * @description Retrive All Follings
+ * @Route [GET]- /api/followers/followings/:id
  * @Access protected - []
  * @returns {Array} - All Filtered Data Array
  */
 router.get(
-  '/',
-  // validateRequest(UserSchema.fetchAllUser),
-  FollowerController.find
+  '/followings/:id',
+  validateRequest(FollowerSchema.fetchAll),
+  FollowerController.following
+)
+/**
+ * @description Retrive All Followers
+ * @Route [GET]- /api/followers/:id
+ * @Access protected - []
+ * @returns {Array} - All Filtered Data Array
+ */
+router.get(
+  '/:id',
+  validateRequest(FollowerSchema.fetchAll),
+  FollowerController.followers
 )
 
 // Exports

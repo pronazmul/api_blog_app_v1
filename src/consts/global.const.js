@@ -13,6 +13,7 @@ GlobalConst.regexp = {
   emailExp:
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   objectIdExp: /^[0-9a-fA-F]{24}$/,
+  startWithHttpExp: /^(http|https):\/\//,
 }
 
 GlobalConst.supportedMimetypes = {

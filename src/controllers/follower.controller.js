@@ -8,35 +8,13 @@ import FollowerService from '../services/follower.service.js'
 // Initialize Module
 const FollowerController = {}
 
-FollowerController.create = async (req, res, next) => {
+FollowerController.follow = async (req, res, next) => {
+  let reqQuery = { following: req.user._id, follower: req.params.id }
   try {
-    let data = await FollowerService.create(req.body)
-    let response = GlobalUtils.fromatResponse(data, 'Blog Create Success!')
-    res.status(200).json(response)
-  } catch (error) {
-    next(createError(500, error))
-  }
-}
-
-FollowerController.findOneById = async (req, res, next) => {
-  try {
-    let data = await FollowerService.findOneById(req.params.id)
-    let response = GlobalUtils.fromatResponse(
-      data,
-      'Single Blog Fetch Success!'
-    )
-    res.status(200).json(response)
-  } catch (error) {
-    next(createError(500, error))
-  }
-}
-
-FollowerController.find = async (req, res, next) => {
-  try {
-    let result = await FollowerService.find(req.query)
+    let result = await FollowerService.follow(reqQuery)
     let response = GlobalUtils.fromatResponse(
       result?.data,
-      'All Blogs Fetch success',
+      'Follow Success!',
       result?.meta
     )
     res.status(200).json(response)
@@ -45,24 +23,45 @@ FollowerController.find = async (req, res, next) => {
   }
 }
 
-FollowerController.updateOneById = async (req, res, next) => {
+FollowerController.unfollow = async (req, res, next) => {
+  let reqQuery = { following: req.user._id, follower: req.params.id }
   try {
-    let id = req.params.id
-    let data = req.body
-    let result = FollowerService.updateOneById(id, data)
-
-    let response = GlobalUtils.fromatResponse(result, 'Blog Update Success!')
+    let result = await FollowerService.unfollow(reqQuery)
+    let response = GlobalUtils.fromatResponse(
+      result?.data,
+      'Unfollow Success!',
+      result?.meta
+    )
     res.status(200).json(response)
   } catch (error) {
     next(createError(500, error))
   }
 }
 
-FollowerController.deleteOneById = async (req, res, next) => {
+FollowerController.followers = async (req, res, next) => {
+  let reqQuery = { ...req.query, follower: req.params.id, active: true }
   try {
-    let id = req.params.id
-    let result = FollowerService.deleteOneById(id)
-    let response = GlobalUtils.fromatResponse(result, 'Blog Delete Success')
+    let result = await FollowerService.find(reqQuery)
+    let response = GlobalUtils.fromatResponse(
+      result?.data,
+      'All Followers Fetch Success!',
+      result?.meta
+    )
+    res.status(200).json(response)
+  } catch (error) {
+    next(createError(500, error))
+  }
+}
+
+FollowerController.following = async (req, res, next) => {
+  let reqQuery = { ...req.query, following: req.params.id, active: true }
+  try {
+    let result = await FollowerService.find(reqQuery)
+    let response = GlobalUtils.fromatResponse(
+      result?.data,
+      'All Following Fetch Success!',
+      result?.meta
+    )
     res.status(200).json(response)
   } catch (error) {
     next(createError(500, error))

@@ -1,29 +1,50 @@
-import UserConst from '../consts/user.const.js'
 import GlobalUtils from '../utils/global.utils.js'
 import MongooseUtils from '../utils/mongoose.utils.js'
 import FollowerModel from '../models/Follower.model.js'
+import ProjectionConst from '../consts/projection.const.js'
+import FollowerConst from './../consts/follower.const.js'
+import PeopleModel from '../models/People.model.js'
 
 // Initialize Module
 const FollowerService = {}
 
-FollowerService.create = async (payload) => {
+FollowerService.follow = async (query) => {
   try {
-    let newData = new FollowerModel(payload)
-    let result = await newData.save()
-    return result
+    let existsFollow = await FollowerModel.findOne({ ...query })
+    if (existsFollow && existsFollow.active) throw Error('Already Followed')
+
+    if (existsFollow && !existsFollow?.active) {
+      await FollowerModel.findOneAndUpdate(query, { active: true })
+    } else {
+      await FollowerModel.create(query)
+    }
+
+    await PeopleModel.incrementFollower(query.follower)
+    await PeopleModel.incrementFollowing(query.following)
+
+    return { data: { followed: true } }
   } catch (error) {
     throw error
   }
 }
 
-FollowerService.findOneById = async (id) => {
+FollowerService.unfollow = async (query) => {
   try {
-    let query = { _id: id }
-    let projection = { password: 0, createdAt: 0, updatedAt: 0 }
-    let result = await FollowerModel.findById(query, projection)
-    // .populate('category')
-    // .populate('tags')
-    return result
+    let followed = await FollowerModel.findOneAndUpdate(
+      {
+        ...query,
+        active: true,
+      },
+      { active: false }
+    )
+
+    if (!followed) throw Error('Not Followed!')
+
+    await PeopleModel.decrementFollower(query.follower)
+    await PeopleModel.decrementFollowing(query.following)
+
+    return { data: { unfollowed: true } }
+    
   } catch (error) {
     throw error
   }
@@ -35,41 +56,26 @@ FollowerService.find = async (reqQuery) => {
 
   const query = MongooseUtils.searchCondition(
     reqQuery,
-    UserConst.searchOptions,
-    UserConst.filterOptions
+    FollowerConst.searchOptions,
+    FollowerConst.filterOptions
   )
   const sort = { [sortBy]: sortOrder }
-  const projection = { password: 0 }
   try {
-    const result = await FollowerModel.find(query, projection)
-      .populate('follower')
-      .populate('following')
+    const result = await FollowerModel.find(query, ProjectionConst.follower)
+      .populate({
+        path: 'follower',
+        select: ProjectionConst.user_with_follower,
+      })
+      .populate({
+        path: 'following',
+        select: ProjectionConst.user_with_follower,
+      })
       .sort(sort)
       .skip(skip)
       .limit(limit)
+      .lean()
     const total = await FollowerModel.countDocuments(query)
     return { data: result, meta: { page, limit, total } }
-  } catch (error) {
-    throw error
-  }
-}
-
-FollowerService.updateOneById = async (id, payload) => {
-  try {
-    let query = { _id: id }
-    let options = { new: true, select: 'name email mobile avatar roles' }
-    const result = await FollowerModel.findOneAndUpdate(query, payload, options)
-    return result
-  } catch (error) {
-    throw error
-  }
-}
-
-FollowerService.deleteOneById = async (id) => {
-  try {
-    let query = { _id: id }
-    let result = await FollowerModel.findOneAndDelete(query)
-    return result
   } catch (error) {
     throw error
   }
