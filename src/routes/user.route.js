@@ -6,6 +6,7 @@ import UserSchema from '../schemas/user.schema.js'
 import ValidateMiddleware from '../middlewares/validate.middleware.js'
 import UserController from './../controllers/user.controller.js'
 import FileMiddleware from '../middlewares/file.middlewares.js'
+import config from '../config/index.js'
 
 const router = Router()
 const { validateRequest } = ValidateMiddleware
@@ -18,7 +19,7 @@ const { validateRequest } = ValidateMiddleware
  */
 router.put(
   '/roles/:id',
-  // validateRequest(UserSchema.updateRole),
+  validateRequest(UserSchema.updateRoles),
   UserController.updateRoles
 )
 
@@ -26,13 +27,29 @@ router.put(
  * @description Update User Password
  * @Route [PUT]- /api/users/password/:userID
  * @Access protected - [user, admin]
- * @returns {Object} - Updated Boolean Status
+ * @returns {Object} - Updated User Docs
  */
 router.put(
   '/password/:id',
-  // validateRequest(UserSchema.updatePassword),
+  validateRequest(UserSchema.updatePassword),
   UserController.updatePassword
 )
+
+/**
+ * @description Activate User By ID
+ * @Route [PUT]- /api/users/activate/:userID
+ * @Access protected - [user, admin]
+ * @returns {Object} - Activate User Docs
+ */
+router.put('/activate/:id', UserController.activate)
+
+/**
+ * @description deactivate User By ID
+ * @Route [PUT]- /api/users/deactivate/:userID
+ * @Access protected - [user, admin]
+ * @returns {Object} - DeActivate User Docs
+ */
+router.put('/deactivate/:id', UserController.deactivate)
 
 /**
  * @description Upload Avatar By UserID.
@@ -42,10 +59,18 @@ router.put(
  */
 router.post(
   '/:id/upload',
-  FileMiddleware.uploadFile(['image'], 'users', 'avatar', 1),
-  FileMiddleware.convertToWebp('users'),
+  FileMiddleware.uploadFile(['image'], config.user_directory, 'avatar', 1),
+  FileMiddleware.convertToWebp(config.user_directory),
   UserController.avatarUpload
 )
+
+/**
+ * @description Delete User By UserID ***
+ * @Route [DELETE]- /api/users/:userID
+ * @Access protected - [admin]
+ * @returns {Object} - Deleted Status.
+ */
+router.delete('/:id', UserController.deleteUser)
 
 /**
  * @description Retrive Single User Info By UserID
@@ -63,17 +88,9 @@ router.get('/:id', UserController.getSingleUser)
  */
 router.put(
   '/:id',
-  // validateRequest(UserSchema.update),
+  validateRequest(UserSchema.update),
   UserController.updateUser
 )
-
-/**
- * @description Delete User By UserID
- * @Route [DELETE]- /api/users/:userID
- * @Access protected - [admin]
- * @returns {Object} - Deleted Status.
- */
-router.delete('/:id', UserController.deleteUser)
 
 /**
  * @description Retrive All Users

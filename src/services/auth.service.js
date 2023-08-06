@@ -35,8 +35,6 @@ AuthService.login = async (payload) => {
 
 AuthService.register = async (payload) => {
   try {
-    console.log({ payload })
-
     let newUser = new UserModel(payload)
     let user = await newUser.save()
 

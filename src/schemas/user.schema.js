@@ -10,6 +10,7 @@ const {
   numberExp,
   usernameExp,
   postCodeExp,
+  objectIdExp,
 } = GlobalConst.regexp
 
 // Initialize Module
@@ -70,31 +71,73 @@ UserSchema.create = object()
   .strict()
   .noUnknown()
 
-UserSchema.update = object().shape({
-  name: string().optional(),
-  email: string().optional().matches(emailExp, 'Invalid Email Address!'),
-  mobile: string().optional().matches(mobileExp, 'Invalid Mobile Number!'),
-})
+UserSchema.update = object()
+  .shape({
+    name: string()
+      .optional()
+      .matches(alphabetExp, 'Name should be alplabet only!'),
+    username: string()
+      .optional()
+      .matches(
+        usernameExp,
+        'Username must be at least 6 char long and contain letters or numbers only!'
+      ),
+    phone: string().optional().matches(mobileExp, 'Invalid phone Number!'),
+    dob: string()
+      .nullable()
+      .test('is-valid-date', 'Invalid Date of Birth!', (value) => {
+        if (!value) return true // Return true if the date is null or not provided
+        return !isNaN(Date.parse(value)) // Return true if the date string is a valid ISO 8601 date
+      })
+      .transform((value, originalValue) =>
+        originalValue ? new Date(originalValue) : null
+      ),
+    bio: string().optional().typeError('Bio should Be String!'),
+    address: object().shape({
+      street: string().optional(),
+      postCode: string()
+        .optional()
+        .matches(postCodeExp, 'Must be number and 4 digit only!'),
+      city: string().optional().matches(alphabetExp, 'Must be Alphabet Only!'),
+      country: string()
+        .optional()
+        .matches(alphabetExp, 'Must be Alphabet Only!'),
+    }),
+  })
+  .strict()
+  .noUnknown()
 
-UserSchema.updatePassword = object().shape({
-  currentPassword: string()
-    .required('Old Password is Required!')
-    .matches(passwordExp, 'Invalid Password!')
-    .min(8, 'Invalid Password!')
-    .max(50, 'Invalid Password!'),
-  newPassword: string()
-    .required('New Password is Required!')
-    .notOneOf([ref('currentPassword')], 'Nothing to change!')
-    .matches(passwordExp, 'Uppercase Lowercase Special char Required')
-    .min(8, 'Password Should be minimum 8 character')
-    .max(50, 'Too long'),
-  confirmPassword: string()
-    .required('Confirm Password is Required!')
-    .when('newPassword', (password, field) =>
-      password ? field.required() : field
-    )
-    .oneOf([ref('newPassword')], 'Password does not matched'),
-})
+UserSchema.updatePassword = object()
+  .shape({
+    currentPassword: string()
+      .required('Old Password is Required!')
+      .matches(passwordExp, 'Invalid Password!')
+      .min(8, 'Invalid Password!')
+      .max(50, 'Invalid Password!'),
+    newPassword: string()
+      .required('New Password is Required!')
+      .notOneOf([ref('currentPassword')], 'Nothing to change!')
+      .matches(passwordExp, 'Uppercase Lowercase Special char Required')
+      .min(8, 'Password Should be minimum 8 character')
+      .max(50, 'Too long'),
+    confirmPassword: string()
+      .required('Confirm Password is Required!')
+      .when('newPassword', (password, field) =>
+        password ? field.required() : field
+      )
+      .oneOf([ref('newPassword')], 'Password does not matched'),
+  })
+  .strict()
+  .noUnknown()
+
+UserSchema.updateRoles = object()
+  .shape({
+    role: string()
+      .required('Role is Required!')
+      .matches(objectIdExp, 'Invalid Object ID!'),
+  })
+  .strict()
+  .noUnknown()
 
 UserSchema.fetchAllUser = object()
   .shape({

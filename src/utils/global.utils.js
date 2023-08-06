@@ -77,17 +77,6 @@ GlobalUtils.fromatResponse = (
     meta,
     data: data,
   }
-  // --------Gnerated Demo Output---------------
-  //{
-  //   success: boolean;
-  //   message?: string | null;
-  //   meta?: {
-  //     page: number;
-  //     limit: number;
-  //     total: number;
-  //   };
-  //   data?: Obj | Array | null;
-  // };
 }
 
 export default GlobalUtils

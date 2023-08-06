@@ -3,6 +3,7 @@ import UserConst from '../consts/user.const.js'
 import GlobalUtils from '../utils/global.utils.js'
 import MongooseUtils from '../utils/mongoose.utils.js'
 import UserModel from './../models/People.model.js'
+import ProjectionConst from '../consts/projection.const.js'
 
 // Initialize Module
 const UserService = {}
@@ -10,8 +11,10 @@ const UserService = {}
 UserService.findOneById = async (id) => {
   try {
     let query = { _id: id }
-    let projection = { password: 0, createdAt: 0, updatedAt: 0 }
-    let user = await UserModel.findById(query, projection).populate('role')
+    let user = await UserModel.findById(query, ProjectionConst.user).populate({
+      path: 'role',
+      select: ProjectionConst.role_with_user,
+    })
     return user
   } catch (error) {
     throw error
@@ -28,10 +31,9 @@ UserService.find = async (reqQuery) => {
     UserConst.filterOptions
   )
   const sort = { [sortBy]: sortOrder }
-  const projection = { password: 0 }
   try {
-    const users = await UserModel.find(query, projection)
-      .populate('role')
+    const users = await UserModel.find(query, ProjectionConst.user)
+      .populate({ path: 'role', select: ProjectionConst.role_with_user })
       .sort(sort)
       .skip(skip)
       .limit(limit)
@@ -45,8 +47,11 @@ UserService.find = async (reqQuery) => {
 UserService.updateOneById = async (id, payload) => {
   try {
     let query = { _id: id }
-    let options = { new: true, select: 'name email mobile avatar roles' }
+    let options = { new: true, select: ProjectionConst.user }
     const result = await UserModel.findOneAndUpdate(query, payload, options)
+
+    console.log({ result })
+
     return result
   } catch (error) {
     throw error
@@ -56,21 +61,47 @@ UserService.updateOneById = async (id, payload) => {
 UserService.updatePassowrdById = async (id, oldPass, newPass) => {
   try {
     let query = { _id: id }
-    let options = { new: true }
+    let options = { new: true, select: ProjectionConst.user }
 
     const user = await UserModel.findById(query)
     let isMatch = await bcrypt.compare(oldPass, user?.password)
 
     if (user && isMatch) {
-      const password = bcrypt.hash(newPass)
-      let updatedData = {
+      const password = await bcrypt.hash(newPass, 10)
+      let payload = {
         password,
       }
-      let result = await UserModel.findOneAndUpdate(query, updatedData, options)
+      let result = await UserModel.findOneAndUpdate(query, payload, options)
       return result
     } else {
-      throw "Passowrd dosen't Match!"
+      throw Error("Passowrd Dosen't Match!")
     }
+  } catch (error) {
+    throw error
+  }
+}
+
+UserService.activate = async (id) => {
+  try {
+    let query = { _id: id, active: false }
+    let payload = { active: true }
+    let options = { new: true, select: ProjectionConst.user }
+    const result = await UserModel.findOneAndUpdate(query, payload, options)
+    if (!result) throw Error('Failed to Activate!')
+    return result
+  } catch (error) {
+    throw error
+  }
+}
+
+UserService.deactivate = async (id) => {
+  try {
+    let query = { _id: id, active: true }
+    let payload = { active: false }
+    let options = { new: true, select: ProjectionConst.user }
+    const result = await UserModel.findOneAndUpdate(query, payload, options)
+    if (!result) throw Error('Failed to Deactivate!')
+    return result
   } catch (error) {
     throw error
   }

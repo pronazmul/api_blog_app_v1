@@ -8,10 +8,19 @@ UserConst.createFields = [
   'username',
   'phone',
   'dob',
+  'bio',
   'address',
 ]
 
-UserConst.searchOptions = ['name', 'bio', 'username', 'address.city']
+UserConst.updateFields = ['name', 'username', 'phone', 'dob', 'bio', 'address']
+
+UserConst.searchOptions = [
+  'name',
+  'bio',
+  'username',
+  'address.city',
+  'role.name',
+]
 UserConst.sortOptions = [
   'name',
   'dob',

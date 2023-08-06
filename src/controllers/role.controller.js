@@ -39,7 +39,7 @@ RoleController.activate = async (req, res, next) => {
   try {
     let id = req.params.id
     let result = await RoleService.activateRole(id)
-    console.log({ result })
+
     let response = GlobalUtils.fromatResponse(result, 'Role Activated!')
     res.status(200).json(response)
   } catch (error) {
@@ -51,7 +51,6 @@ RoleController.deactivate = async (req, res, next) => {
   try {
     let id = req.params.id
     let result = await RoleService.deactivateRole(id)
-
     let response = GlobalUtils.fromatResponse(result, 'Role Deactivated!')
     res.status(200).json(response)
   } catch (error) {

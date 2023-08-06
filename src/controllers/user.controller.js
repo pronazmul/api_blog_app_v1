@@ -5,6 +5,8 @@ import createError from 'http-errors'
 import FilesUtils from './../utils/files.utils.js'
 import GlobalUtils from './../utils/global.utils.js'
 import UserService from '../services/user.service.js'
+import UserConst from '../consts/user.const.js'
+import config from '../config/index.js'
 
 // Initialize Module
 const UserController = {}
@@ -39,9 +41,9 @@ UserController.allUsers = async (req, res, next) => {
 UserController.updateUser = async (req, res, next) => {
   try {
     let id = req.params.id
-    let data = req.body
-    let result = UserService.updateOneById(id, data)
+    let payload = GlobalUtils.fieldsFromObject(req.body, UserConst.updateFields)
 
+    let result = await UserService.updateOneById(id, payload)
     let response = GlobalUtils.fromatResponse(result, 'User Update Success!')
     res.status(200).json(response)
   } catch (error) {
@@ -53,15 +55,13 @@ UserController.updatePassword = async (req, res, next) => {
   try {
     let id = req.params.id
     const { currentPassword, newPassword } = req.body
-    const result = UserService.updatePassowrdById(
+    const result = await UserService.updatePassowrdById(
       id,
       currentPassword,
       newPassword
     )
-    let response = GlobalUtils.fromatResponse(
-      result,
-      'Password Changed Successfully!'
-    )
+
+    let response = GlobalUtils.fromatResponse(result, 'Password Updated!')
     res.status(200).json(response)
   } catch (error) {
     next(createError(500, error))
@@ -71,9 +71,30 @@ UserController.updatePassword = async (req, res, next) => {
 UserController.updateRoles = async (req, res, next) => {
   try {
     let id = req.params.id
-    let data = req.body.roles
-    const result = UserService.updateOneById(id, data)
-    let response = GlobalUtils.fromatResponse(result, 'Password Updated!')
+    let payload = req.query
+    const result = await UserService.updateOneById(id, payload)
+
+    let response = GlobalUtils.fromatResponse(result, 'Role Updated!')
+    res.status(200).json(response)
+  } catch (error) {
+    next(createError(500, error))
+  }
+}
+UserController.activate = async (req, res, next) => {
+  try {
+    let id = req.params.id
+    const result = await UserService.activate(id)
+    let response = GlobalUtils.fromatResponse(result, 'User Activated!')
+    res.status(200).json(response)
+  } catch (error) {
+    next(createError(500, error))
+  }
+}
+UserController.deactivate = async (req, res, next) => {
+  try {
+    let id = req.params.id
+    const result = await UserService.deactivate(id)
+    let response = GlobalUtils.fromatResponse(result, 'User Deactivated!')
     res.status(200).json(response)
   } catch (error) {
     next(createError(500, error))
@@ -95,15 +116,22 @@ UserController.avatarUpload = async (req, res, next) => {
   try {
     let id = req.params.id
     let filename = req.files?.length ? req.files[0].filename : null
+
     if (!filename) {
       return next(createError(422, 'No Avatar Found!'))
     }
+
+    // If Current User Has Avatar Remove That First
     const currentUser = await UserService.findOneById(id)
     if (currentUser?.avatar) {
-      FilesUtils.removeOne('users', currentUser.avatar.split('/').pop())
+      FilesUtils.removeOne(
+        config.user_directory,
+        currentUser.avatar.split('/').pop()
+      )
     }
     const result = await UserService.updateOneById(id, { avatar: filename })
     let response = GlobalUtils.fromatResponse(result, 'Avatar Upload Success!')
+
     res.status(200).json(response)
   } catch (error) {
     next(createError(500, error))
