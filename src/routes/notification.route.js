@@ -4,48 +4,29 @@ import { Router } from 'express'
 // Middlewares
 import ValidateMiddleware from '../middlewares/validate.middleware.js'
 import NotificationController from '../controllers/notification.controller.js'
+import NotificationSchema from './../schemas/notification.schema.js'
 
 const router = Router()
 const { validateRequest } = ValidateMiddleware
 
 /**
- * @description Retrive Single Data By ID
+ * @description Read Notification
  * @Route [GET]- /api/notifications/:id
  * @Access protected - []
  * @returns {Object} - Single Object
  */
-router.get('/:id', NotificationController.findOneById)
+router.put('/:id', NotificationController.readNotification)
 
 /**
- * @description Update Data BY ID
- * @Route [PUT]- /api/notifications/:id
+ * @description All Notifications Of Logged In User
+ * @Route [GET]- /api/notifications
  * @Access protected - []
- * @returns {Object} - Updated Data
- */
-router.put(
-  '/:id',
-  // validateRequest(UserSchema.update),
-  NotificationController.updateOneById
-)
-
-/**
- * @description Delete Data By ID
- * @Route [DELETE]- /api/notifications/:id
- * @Access protected - []
- * @returns {Object} - Deleted Status.
- */
-router.delete('/:id', NotificationController.deleteOneById)
-
-/**
- * @description Retrive All Data
- * @Route [GET]- /api/notifications?search=khulna&page=2&limit=1&sortBy=name&sortOrder=desc&username=nazmul&address.city=nazmul&active=true&abcd=fksdfj
- * @Access protected - []
- * @returns {Array} - All Filtered Data Array
+ * @returns {Array} - JSON Array
  */
 router.get(
   '/',
-  // validateRequest(UserSchema.fetchAllUser),
-  NotificationController.find
+  validateRequest(NotificationSchema.fetchAll),
+  NotificationController.allNotification
 )
 
 // Exports

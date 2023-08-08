@@ -26,8 +26,12 @@ router.use('/api/v1/followers', AuthMiddleware.authenticate, FollowerRoutes)
 router.use('/api/v1/categories', AuthMiddleware.authenticate, CategoryRoutes)
 router.use('/api/v1/tags', AuthMiddleware.authenticate, TagRoutes)
 router.use('/api/v1/blogs', AuthMiddleware.authenticate, BlogRoutes)
+router.use(
+  '/api/v1/notifications',
+  AuthMiddleware.authenticate,
+  NotificationsRoutes
+)
 router.use('/api/v1/likes', LikeRoutes)
-router.use('/api/v1/notifications', NotificationsRoutes)
 router.use('/api/v1/comments', CommentsRoutes)
 
 // Module Exports

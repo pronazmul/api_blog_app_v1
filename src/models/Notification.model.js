@@ -3,6 +3,7 @@ import { Schema, model, Types } from 'mongoose'
 
 const NotificationSchema = Schema(
   {
+    creator: { type: Types.ObjectId, ref: 'People', required: true },
     user: { type: Types.ObjectId, ref: 'People', required: true },
     blog: { type: Types.ObjectId, ref: 'Blog' },
     content: { type: String, required: true },

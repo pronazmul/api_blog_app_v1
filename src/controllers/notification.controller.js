@@ -8,22 +8,12 @@ import NotificationService from '../services/notification.service.js'
 // Initialize Module
 const NotificationController = {}
 
-NotificationController.create = async (req, res, next) => {
+NotificationController.readNotification = async (req, res, next) => {
   try {
-    let data = await NotificationService.create(req.body)
-    let response = GlobalUtils.fromatResponse(data, 'Blog Create Success!')
-    res.status(200).json(response)
-  } catch (error) {
-    next(createError(500, error))
-  }
-}
-
-NotificationController.findOneById = async (req, res, next) => {
-  try {
-    let data = await NotificationService.findOneById(req.params.id)
+    let data = await NotificationService.readNotification(req.params.id)
     let response = GlobalUtils.fromatResponse(
       data,
-      'Single Blog Fetch Success!'
+      'Notification Read Success!'
     )
     res.status(200).json(response)
   } catch (error) {
@@ -31,38 +21,15 @@ NotificationController.findOneById = async (req, res, next) => {
   }
 }
 
-NotificationController.find = async (req, res, next) => {
+NotificationController.allNotification = async (req, res, next) => {
   try {
-    let result = await NotificationService.find(req.query)
+    let reqQuery = { ...req.query, user: req.user._id, readStatus: false }
+    let result = await NotificationService.find(reqQuery)
     let response = GlobalUtils.fromatResponse(
       result?.data,
-      'All Blogs Fetch success',
+      'All Notification Fetch Success!',
       result?.meta
     )
-    res.status(200).json(response)
-  } catch (error) {
-    next(createError(500, error))
-  }
-}
-
-NotificationController.updateOneById = async (req, res, next) => {
-  try {
-    let id = req.params.id
-    let data = req.body
-    let result = NotificationService.updateOneById(id, data)
-
-    let response = GlobalUtils.fromatResponse(result, 'Blog Update Success!')
-    res.status(200).json(response)
-  } catch (error) {
-    next(createError(500, error))
-  }
-}
-
-NotificationController.deleteOneById = async (req, res, next) => {
-  try {
-    let id = req.params.id
-    let result = NotificationService.deleteOneById(id)
-    let response = GlobalUtils.fromatResponse(result, 'Blog Delete Success')
     res.status(200).json(response)
   } catch (error) {
     next(createError(500, error))
