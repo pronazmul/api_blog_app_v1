@@ -1,7 +1,8 @@
-import UserConst from '../consts/user.const.js'
 import GlobalUtils from '../utils/global.utils.js'
 import MongooseUtils from '../utils/mongoose.utils.js'
 import TagModel from '../models/Tag.model.js'
+import TagConst from '../consts/tag.const.js'
+import ProjectionConst from '../consts/projection.const.js'
 
 // Initialize Module
 const TagService = {}
@@ -19,10 +20,8 @@ TagService.create = async (payload) => {
 TagService.findOneById = async (id) => {
   try {
     let query = { _id: id }
-    let projection = { password: 0, createdAt: 0, updatedAt: 0 }
+    let projection = ProjectionConst.tag
     let result = await TagModel.findById(query, projection)
-    // .populate('category')
-    // .populate('tags')
     return result
   } catch (error) {
     throw error
@@ -35,14 +34,13 @@ TagService.find = async (reqQuery) => {
 
   const query = MongooseUtils.searchCondition(
     reqQuery,
-    UserConst.searchOptions,
-    UserConst.filterOptions
+    TagConst.searchOptions,
+    TagConst.filterOptions
   )
   const sort = { [sortBy]: sortOrder }
-  const projection = { password: 0 }
+  const projection = ProjectionConst.tag
   try {
     const result = await TagModel.find(query, projection)
-      // .populate('user')
       .sort(sort)
       .skip(skip)
       .limit(limit)
@@ -56,7 +54,7 @@ TagService.find = async (reqQuery) => {
 TagService.updateOneById = async (id, payload) => {
   try {
     let query = { _id: id }
-    let options = { new: true, select: 'name email mobile avatar roles' }
+    let options = { new: true, select: ProjectionConst.tag }
     const result = await TagModel.findOneAndUpdate(query, payload, options)
     return result
   } catch (error) {
@@ -68,6 +66,15 @@ TagService.deleteOneById = async (id) => {
   try {
     let query = { _id: id }
     let result = await TagModel.findOneAndDelete(query)
+    return result
+  } catch (error) {
+    throw error
+  }
+}
+
+TagService.incrementBlogCount = async (id) => {
+  try {
+    let result = await TagModel.incrementBlogCount(id)
     return result
   } catch (error) {
     throw error

@@ -4,13 +4,27 @@ import createError from 'http-errors'
 // Internal Modules:
 import GlobalUtils from '../utils/global.utils.js'
 import BlogService from '../services/blog.service.js'
+import TagService from '../services/tag.service.js'
 
 // Initialize Module
 const BlogController = {}
 
 BlogController.create = async (req, res, next) => {
   try {
-    let data = await BlogService.create(req.body)
+    // Parse Stringify Tags && Inset Blogs Count to Tags
+    let tags = JSON.parse(req?.body?.tags)
+
+    for (let id of tags) {
+      await TagService.incrementBlogCount(id)
+    }
+
+    let payload = { ...req.body, tags, user: req?.user?._id }
+
+    if (req?.files[0]?.filename) {
+      payload.image = req?.files[0]?.filename
+    }
+
+    let data = await BlogService.create(payload)
     let response = GlobalUtils.fromatResponse(data, 'Blog Create Success!')
     res.status(200).json(response)
   } catch (error) {
@@ -49,8 +63,7 @@ BlogController.updateOneById = async (req, res, next) => {
   try {
     let id = req.params.id
     let data = req.body
-    let result = BlogService.updateOneById(id, data)
-
+    let result = await BlogService.updateOneById(id, data)
     let response = GlobalUtils.fromatResponse(result, 'Blog Update Success!')
     res.status(200).json(response)
   } catch (error) {

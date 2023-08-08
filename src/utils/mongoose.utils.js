@@ -80,28 +80,15 @@ MongooseUtils.errorFormatter = (error) => {
 }
 
 /**
- * @desc Multiple Search Query Generator usign Regx
- * @param {string} Search String
- * @param {array} Array of Fields to search
- * @returns {object} Search Query Object
+ * @desc Mmongoose Validation Error Formatter Function
+ * @param {Object} Error Object
+ * @returns {Object} Formatted Object
  */
-
-MongooseUtils.regexQuery = (searchString = '', fieldsArray = []) => {
-  return {
-    $or: fieldsArray.map((v) => ({
-      [v]: { $regex: searchString, $options: 'i' },
-    })),
-  }
-  /**
- @demoShape
-   {
-    $or: [
-      { name: { $regex: req.query.keyword, $options: 'i' } },
-      { brand: { $regex: req.query.keyword, $options: 'i' } },
-      { category: { $regex: req.query.keyword, $options: 'i' } },
-    ],
-  }
- */
+MongooseUtils.duplicateKeyFormatter = (error) => {
+  return Object.entries(error).reduce(
+    (state, [k, v]) => [...state, { message: `${v} already exists!`, path: k }],
+    []
+  )
 }
 
 /**

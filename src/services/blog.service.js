@@ -1,8 +1,8 @@
-import { Types } from 'mongoose'
-import UserConst from '../consts/user.const.js'
 import GlobalUtils from '../utils/global.utils.js'
 import MongooseUtils from '../utils/mongoose.utils.js'
 import BlogModel from '../models/Blog.model.js'
+import ProjectionConst from '../consts/projection.const.js'
+import BlogConst from '../consts/blog.const.js'
 
 // Initialize Module
 const BlogService = {}
@@ -10,7 +10,18 @@ const BlogService = {}
 BlogService.create = async (payload) => {
   try {
     let newData = new BlogModel(payload)
-    let result = await newData.save()
+    await newData.save()
+    let result = await BlogModel.findById(
+      { _id: newData._id },
+      ProjectionConst.blog
+    )
+      .populate({ path: 'user', select: ProjectionConst.blog_user })
+      .populate({ path: 'category', select: ProjectionConst.blog_category })
+      .populate({
+        path: 'subcategory',
+        select: ProjectionConst.blog_subCategory,
+      })
+      .populate({ path: 'tags', select: ProjectionConst.blog_tags })
     return result
   } catch (error) {
     throw error
@@ -20,12 +31,15 @@ BlogService.create = async (payload) => {
 BlogService.findOneById = async (id) => {
   try {
     let query = { _id: id }
-    let projection = { password: 0, createdAt: 0, updatedAt: 0 }
+    let projection = ProjectionConst.blog
     let result = await BlogModel.findById(query, projection)
-      .populate('user')
-      .populate('category')
-      .populate('subcategory')
-      .populate('tags')
+      .populate({ path: 'user', select: ProjectionConst.blog_user })
+      .populate({ path: 'category', select: ProjectionConst.blog_category })
+      .populate({
+        path: 'subcategory',
+        select: ProjectionConst.blog_subCategory,
+      })
+      .populate({ path: 'tags', select: ProjectionConst.blog_tags })
 
     return result
   } catch (error) {
@@ -39,18 +53,21 @@ BlogService.find = async (reqQuery) => {
 
   const query = MongooseUtils.searchCondition(
     reqQuery,
-    UserConst.searchOptions,
-    UserConst.filterOptions
+    BlogConst.searchOptions,
+    BlogConst.filterOptions
   )
   const sort = { [sortBy]: sortOrder }
-  const projection = { password: 0 }
+  const projection = ProjectionConst.blog
 
   try {
     const result = await BlogModel.find(query, projection)
-      .populate('user')
-      .populate('subcategory')
-      .populate('tags')
-      .populate('category')
+      .populate({ path: 'user', select: ProjectionConst.blog_user })
+      .populate({ path: 'category', select: ProjectionConst.blog_category })
+      .populate({
+        path: 'subcategory',
+        select: ProjectionConst.blog_subCategory,
+      })
+      .populate({ path: 'tags', select: ProjectionConst.blog_tags })
       .sort(sort)
       .skip(skip)
       .limit(limit)
@@ -66,8 +83,15 @@ BlogService.find = async (reqQuery) => {
 BlogService.updateOneById = async (id, payload) => {
   try {
     let query = { _id: id }
-    let options = { new: true, select: 'name email mobile avatar roles' }
+    let options = { new: true, select: ProjectionConst.blog }
     const result = await BlogModel.findOneAndUpdate(query, payload, options)
+      .populate({ path: 'user', select: ProjectionConst.blog_user })
+      .populate({ path: 'category', select: ProjectionConst.blog_category })
+      .populate({
+        path: 'subcategory',
+        select: ProjectionConst.blog_subCategory,
+      })
+      .populate({ path: 'tags', select: ProjectionConst.blog_tags })
     return result
   } catch (error) {
     throw error

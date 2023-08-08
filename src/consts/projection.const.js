@@ -16,4 +16,13 @@ ProjectionConst.follower = 'follower following active createdAt'
 ProjectionConst.category = 'name image description createdAt'
 ProjectionConst.subCateogry = 'category name image description createdAt'
 
+ProjectionConst.tag = 'name blogCount createdAt'
+
+ProjectionConst.blog =
+  'user category subcategory tags title content image likesCount commentCount createdAt'
+ProjectionConst.blog_user = 'name username avatar'
+ProjectionConst.blog_category = 'name image'
+ProjectionConst.blog_subCategory = 'name image'
+ProjectionConst.blog_tags = 'name'
+
 export default ProjectionConst

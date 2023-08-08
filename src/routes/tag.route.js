@@ -4,6 +4,7 @@ import { Router } from 'express'
 // Middlewares
 import ValidateMiddleware from '../middlewares/validate.middleware.js'
 import TagController from '../controllers/tag.controller.js'
+import TagSchema from './../schemas/tag.schema.js'
 
 const router = Router()
 const { validateRequest } = ValidateMiddleware
@@ -24,35 +25,25 @@ router.get('/:id', TagController.findOneById)
  */
 router.put(
   '/:id',
-  // validateRequest(UserSchema.update),
+  validateRequest(TagSchema.update),
   TagController.updateOneById
 )
 
 /**
- * @description Delete Data By ID
- * @Route [DELETE]- /api/tags/:id
- * @Access protected - []
- * @returns {Object} - Deleted Status.
- */
-router.delete('/:id', TagController.deleteOneById)
-
-/**
  * @description Retrive All Data
- * @Route [GET]- /api/tags?search=khulna&page=2&limit=1&sortBy=name&sortOrder=desc&username=nazmul&address.city=nazmul&active=true&abcd=fksdfj
+ * @Route [GET]- /api/tags
  * @Access protected - []
  * @returns {Array} - All Filtered Data Array
  */
-router.get(
-  '/',
-  // validateRequest(UserSchema.fetchAllUser),
-  TagController.find
-)
+router.get('/', validateRequest(TagSchema.fetchAll), TagController.find)
 
-router.post(
-  '/',
-  // validateRequest(UserSchema.fetchAllUser),
-  TagController.create
-)
+/**
+ * @description Create Data
+ * @Route [POST]- /api/tags
+ * @Access protected - []
+ * @returns {Object} - Created Object
+ */
+router.post('/', validateRequest(TagSchema.create), TagController.create)
 
 // Exports
 export default router

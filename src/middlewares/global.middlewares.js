@@ -10,7 +10,6 @@ import config from './../config/index.js'
 import MongooseUtils from '../utils/mongoose.utils.js'
 import YupUtils from '../utils/yup.utils.js'
 import FilesUtils from '../utils/files.utils.js'
-import fs from 'fs'
 
 // Initialize Module =
 const GlobalMiddlewares = {}
@@ -111,6 +110,19 @@ GlobalMiddlewares.error = async (error, req, res, next) => {
   if (error instanceof TypeError) {
     statusCode = 422
     message = `Type Error - ${error?.message}`
+  }
+
+  // Check CastError
+  if (error?.name === 'CastError') {
+    statusCode = 400
+    message = 'Invalid parameter Value'
+  }
+
+  // Handle MongoServerError (Duplicate Key Error)
+  if (error.name === 'MongoServerError' && error.code === 11000) {
+    statusCode = 400
+    message = 'Duplicate Key Error'
+    errors = MongooseUtils.duplicateKeyFormatter(error.keyValue)
   }
 
   const errorMessage =

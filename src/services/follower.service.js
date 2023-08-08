@@ -44,7 +44,6 @@ FollowerService.unfollow = async (query) => {
     await PeopleModel.decrementFollowing(query.following)
 
     return { data: { unfollowed: true } }
-    
   } catch (error) {
     throw error
   }

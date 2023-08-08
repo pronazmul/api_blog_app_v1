@@ -133,60 +133,60 @@ const importData = async () => {
 
     // Write Followers && INcrease User Followers && Increase User Following
     let followers = []
-    // users.forEach((u) => {
-    //   let SomeUsersExceptOwn = GlobalUtils.randomMultipleFromArray(
-    //     users.filter((fu) => fu._id !== u._id)
-    //   ).map((p) => p._id)
+    users.forEach((u) => {
+      let SomeUsersExceptOwn = GlobalUtils.randomMultipleFromArray(
+        users.filter((fu) => fu._id !== u._id)
+      ).map((p) => p._id)
 
-    //   // Insert Followers Conllections
-    //   SomeUsersExceptOwn.forEach((i) => {
-    //     followers.push(
-    //       new FollowerModel({
-    //         follower: u._id,
-    //         following: i,
-    //       })
-    //     )
-    //   })
+      // Insert Followers Conllections
+      SomeUsersExceptOwn.forEach((i) => {
+        followers.push(
+          new FollowerModel({
+            follower: u._id,
+            following: i,
+          })
+        )
+      })
 
-    //   users = users.map((a) => {
-    //     // Increase Followers Count
-    //     if (a._id === u._id) {
-    //       a.followers = a.followers + SomeUsersExceptOwn.length
-    //       return a
-    //     }
+      users = users.map((a) => {
+        // Increase Followers Count
+        if (a._id === u._id) {
+          a.followers = a.followers + SomeUsersExceptOwn.length
+          return a
+        }
 
-    //     // Increae Following Count
-    //     if (SomeUsersExceptOwn.includes(a._id)) {
-    //       a.following = a.following + 1
-    //       return a
-    //     }
+        // Increae Following Count
+        if (SomeUsersExceptOwn.includes(a._id)) {
+          a.following = a.following + 1
+          return a
+        }
 
-    //     return a
-    //   })
-    // })
+        return a
+      })
+    })
 
     // Write Likes And Notifications
     let likes = []
     let notifications = []
-    // blogs.forEach((b) => {
-    //   GlobalUtils.randomMultipleFromArray(users).forEach((u) => {
-    //     likes.push(new LikeModel({ user: u._id, blog: b._id }))
-    //   })
+    blogs.forEach((b) => {
+      GlobalUtils.randomMultipleFromArray(users).forEach((u) => {
+        likes.push(new LikeModel({ user: u._id, blog: b._id }))
+      })
 
-    //   let currentUser = users.filter((u) => u._id === b.user)[0]
+      let currentUser = users.filter((u) => u._id === b.user)[0]
 
-    //   followers
-    //     .filter((f) => f.follower === b.user)
-    //     .forEach((u) => {
-    //       notifications.push(
-    //         new NotificationModel({
-    //           user: u.following,
-    //           blog: b._id,
-    //           content: `${currentUser.name} Posted a blog!`,
-    //         })
-    //       )
-    //     })
-    // })
+      followers
+        .filter((f) => f.follower === b.user)
+        .forEach((u) => {
+          notifications.push(
+            new NotificationModel({
+              user: u.following,
+              blog: b._id,
+              content: `${currentUser.name} Posted a blog!`,
+            })
+          )
+        })
+    })
 
     await RoleModel.create(roles)
     await UserModel.create(users)
@@ -196,9 +196,9 @@ const importData = async () => {
 
     await BlogModel.create(blogs)
     await CommentModel.create(comments)
-    // await FollowerModel.create(followers)
+    await FollowerModel.create(followers)
     await LikeModel.create(likes)
-    // await NotificationModel.create(notifications)
+    await NotificationModel.create(notifications)
 
     // --------------
 

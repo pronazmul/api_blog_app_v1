@@ -4,9 +4,13 @@ import { Router } from 'express'
 // Middlewares
 import ValidateMiddleware from '../middlewares/validate.middleware.js'
 import BlogController from '../controllers/blog.controller.js'
+import BlogSchema from '../schemas/blog.schema.js'
+import FileMiddleware from './../middlewares/file.middlewares.js'
+import config from '../config/index.js'
 
 const router = Router()
 const { validateRequest } = ValidateMiddleware
+const { uploadFile, convertToWebp } = FileMiddleware
 
 /**
  * @description Retrive Single Data By ID
@@ -24,7 +28,7 @@ router.get('/:id', BlogController.findOneById)
  */
 router.put(
   '/:id',
-  // validateRequest(UserSchema.update),
+  validateRequest(BlogSchema.update),
   BlogController.updateOneById
 )
 
@@ -38,24 +42,22 @@ router.delete('/:id', BlogController.deleteOneById)
 
 /**
  * @description Retrive All Data
- * @Route [GET]- /api/blogs?search=khulna&page=2&limit=1&sortBy=name&sortOrder=desc&username=nazmul&address.city=nazmul&active=true&abcd=fksdfj
+ * @Route [GET]- /api/blogs
  * @Access protected - []
  * @returns {Array} - All Filtered Data Array
  */
-router.get(
-  '/',
-  // validateRequest(UserSchema.fetchAllUser),
-  BlogController.find
-)
+router.get('/', validateRequest(BlogSchema.fetchAll), BlogController.find)
 /**
- * @description Retrive All Data
- * @Route [GET]- /api/blogs?search=khulna&page=2&limit=1&sortBy=name&sortOrder=desc&username=nazmul&address.city=nazmul&active=true&abcd=fksdfj
+ * @description Create New Blog
+ * @Route [POST]- /api/blogs
  * @Access protected - []
- * @returns {Array} - All Filtered Data Array
+ * @returns {Object} - Created Blog Docs
  */
 router.post(
   '/',
-  // validateRequest(UserSchema.fetchAllUser),
+  uploadFile(['image'], config.blog_directory, 'image', 1),
+  convertToWebp(config.blog_directory),
+  validateRequest(BlogSchema.create),
   BlogController.create
 )
 

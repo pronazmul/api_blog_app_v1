@@ -11,7 +11,7 @@ const TagController = {}
 TagController.create = async (req, res, next) => {
   try {
     let data = await TagService.create(req.body)
-    let response = GlobalUtils.fromatResponse(data, 'Blog Create Success!')
+    let response = GlobalUtils.fromatResponse(data, 'Tag Create Success!')
     res.status(200).json(response)
   } catch (error) {
     next(createError(500, error))
@@ -21,10 +21,7 @@ TagController.create = async (req, res, next) => {
 TagController.findOneById = async (req, res, next) => {
   try {
     let data = await TagService.findOneById(req.params.id)
-    let response = GlobalUtils.fromatResponse(
-      data,
-      'Single Blog Fetch Success!'
-    )
+    let response = GlobalUtils.fromatResponse(data, 'Single Tag Fetch Success!')
     res.status(200).json(response)
   } catch (error) {
     next(createError(500, error))
@@ -36,7 +33,7 @@ TagController.find = async (req, res, next) => {
     let result = await TagService.find(req.query)
     let response = GlobalUtils.fromatResponse(
       result?.data,
-      'All Blogs Fetch success',
+      'All Tags Fetch success',
       result?.meta
     )
     res.status(200).json(response)
@@ -49,24 +46,15 @@ TagController.updateOneById = async (req, res, next) => {
   try {
     let id = req.params.id
     let data = req.body
-    let result = TagService.updateOneById(id, data)
+    let result = await TagService.updateOneById(id, data)
 
-    let response = GlobalUtils.fromatResponse(result, 'Blog Update Success!')
+    let response = GlobalUtils.fromatResponse(result, 'Tag Update Success!')
     res.status(200).json(response)
   } catch (error) {
     next(createError(500, error))
   }
 }
 
-TagController.deleteOneById = async (req, res, next) => {
-  try {
-    let id = req.params.id
-    let result = TagService.deleteOneById(id)
-    let response = GlobalUtils.fromatResponse(result, 'Blog Delete Success')
-    res.status(200).json(response)
-  } catch (error) {
-    next(createError(500, error))
-  }
-}
+
 
 export default TagController

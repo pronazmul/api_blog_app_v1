@@ -21,7 +21,6 @@ CategorySchema.plugin(uniqueValidator, {
 CategorySchema.post(/^find|^findOne|^findById|^save/, function (docs, next) {
   // Check the response is object
   if (typeof docs === 'object' && !Array.isArray(docs) && docs?.image) {
-    console.log('This is object')
     docs.image = `${config.server_url}/${config.category_directory}/${docs.image}`
   }
 
