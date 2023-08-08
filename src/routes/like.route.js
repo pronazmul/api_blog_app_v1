@@ -4,49 +4,34 @@ import { Router } from 'express'
 // Middlewares
 import ValidateMiddleware from '../middlewares/validate.middleware.js'
 import LikeController from '../controllers/like.controller.js'
+import LikeSchema from '../schemas/like.schema.js'
 
 const router = Router()
 const { validateRequest } = ValidateMiddleware
 
 /**
- * @description Retrive Single Data By ID
- * @Route [GET]- /api/likes/:id
- * @Access protected - []
- * @returns {Object} - Single Object
- */
-router.get('/:id', LikeController.findOneById)
-
-/**
- * @description Update Data BY ID
- * @Route [PUT]- /api/likes/:id
+ * @description Like By Blog ID
+ * @Route [POST]- /api/likes/:id
  * @Access protected - []
  * @returns {Object} - Updated Data
  */
-router.put(
-  '/:id',
-  // validateRequest(UserSchema.update),
-  LikeController.updateOneById
-)
+router.post('/like/:id', LikeController.like)
 
 /**
- * @description Delete Data By ID
- * @Route [DELETE]- /api/likes/:id
+ * @description Unlike By Blog ID
+ * @Route [POST]- /api/likes/:id
  * @Access protected - []
- * @returns {Object} - Deleted Status.
+ * @returns {Object} - Updated Data
  */
-router.delete('/:id', LikeController.deleteOneById)
+router.post('/unlike/:id', LikeController.unlike)
 
 /**
  * @description Retrive All Data
- * @Route [GET]- /api/likes?search=khulna&page=2&limit=1&sortBy=name&sortOrder=desc&username=nazmul&address.city=nazmul&active=true&abcd=fksdfj
+ * @Route [GET]- /api/likes/:blogID
  * @Access protected - []
  * @returns {Array} - All Filtered Data Array
  */
-router.get(
-  '/',
-  // validateRequest(UserSchema.fetchAllUser),
-  LikeController.find
-)
+router.get('/:id', validateRequest(LikeSchema.fetchAll), LikeController.find)
 
 // Exports
 export default router

@@ -27,7 +27,14 @@ ProjectionConst.blog_subCategory = 'name image'
 ProjectionConst.blog_tags = 'name'
 
 // Notification Projections
-ProjectionConst.notification = 'user blog content type readStatus createdAt'
-ProjectionConst.notification_blog = 'title image '
+ProjectionConst.notification =
+  'creator user blog content type readStatus createdAt'
+ProjectionConst.notification_blog = 'title image'
+ProjectionConst.notification_creator = 'avatar name username'
+
+// Like Projections
+ProjectionConst.like = 'user blog active createdAt'
+ProjectionConst.like_blog = 'title image'
+ProjectionConst.like_user = 'avatar name username'
 
 export default ProjectionConst

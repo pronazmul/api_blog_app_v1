@@ -180,6 +180,7 @@ const importData = async () => {
         .forEach((u) => {
           notifications.push(
             new NotificationModel({
+              creator: u.follower,
               user: u.following,
               blog: b._id,
               content: `${currentUser.name} Posted a blog!`,

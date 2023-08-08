@@ -37,6 +37,10 @@ NotificationService.find = async (reqQuery) => {
   try {
     const result = await NotificationModel.find(query, projection)
       .populate({ path: 'blog', select: ProjectionConst.notification_blog })
+      .populate({
+        path: 'creator',
+        select: ProjectionConst.notification_creator,
+      })
       .sort(sort)
       .skip(skip)
       .limit(limit)

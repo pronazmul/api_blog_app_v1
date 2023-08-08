@@ -49,6 +49,15 @@ BlogSchema.post(/^find|^findOne|^findById|^save/, function (docs, next) {
   next()
 })
 
+// Static Functions
+BlogSchema.statics.incrementLikes = function (id) {
+  return this.findOneAndUpdate({ _id: id }, { $inc: { likesCount: 1 } })
+}
+
+BlogSchema.statics.decrementLikes = function (id) {
+  return this.findOneAndUpdate({ _id: id }, { $inc: { likesCount: -1 } })
+}
+
 // Make Model
 const BlogModel = model('Blog', BlogSchema)
 

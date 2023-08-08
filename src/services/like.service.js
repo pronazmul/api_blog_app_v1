@@ -1,33 +1,12 @@
-import UserConst from '../consts/user.const.js'
 import GlobalUtils from '../utils/global.utils.js'
 import MongooseUtils from '../utils/mongoose.utils.js'
 import LikeModel from '../models/Like.model.js'
+import LikeConst from '../consts/like.const.js'
+import ProjectionConst from '../consts/projection.const.js'
+import BlogModel from '../models/Blog.model.js'
 
 // Initialize Module
 const LikeService = {}
-
-LikeService.create = async (payload) => {
-  try {
-    let newData = new LikeModel(payload)
-    let result = await newData.save()
-    return result
-  } catch (error) {
-    throw error
-  }
-}
-
-LikeService.findOneById = async (id) => {
-  try {
-    let query = { _id: id }
-    let projection = { password: 0, createdAt: 0, updatedAt: 0 }
-    let result = await LikeModel.findById(query, projection)
-    // .populate('category')
-    // .populate('tags')
-    return result
-  } catch (error) {
-    throw error
-  }
-}
 
 LikeService.find = async (reqQuery) => {
   const { page, limit, skip, sortBy, sortOrder } =
@@ -35,14 +14,14 @@ LikeService.find = async (reqQuery) => {
 
   const query = MongooseUtils.searchCondition(
     reqQuery,
-    UserConst.searchOptions,
-    UserConst.filterOptions
+    LikeConst.searchOptions,
+    LikeConst.filterOptions
   )
   const sort = { [sortBy]: sortOrder }
-  const projection = { password: 0 }
+  const projection = ProjectionConst.like
   try {
     const result = await LikeModel.find(query, projection)
-      // .populate('user')
+      .populate({ path: 'user', select: ProjectionConst.like_user })
       .sort(sort)
       .skip(skip)
       .limit(limit)
@@ -53,22 +32,36 @@ LikeService.find = async (reqQuery) => {
   }
 }
 
-LikeService.updateOneById = async (id, payload) => {
+LikeService.like = async (query) => {
   try {
-    let query = { _id: id }
-    let options = { new: true, select: 'name email mobile avatar roles' }
-    const result = await LikeModel.findOneAndUpdate(query, payload, options)
-    return result
+    let existsLike = await LikeModel.findOne({ ...query })
+    if (existsLike && existsLike.active) throw Error('Already Liked!')
+
+    if (existsLike && !existsLike?.active) {
+      await LikeModel.findOneAndUpdate(query, { active: true })
+    } else {
+      await LikeModel.create(query)
+    }
+    await BlogModel.incrementLikes(query?.blog)
+    return { liked: true }
   } catch (error) {
     throw error
   }
 }
 
-LikeService.deleteOneById = async (id) => {
+LikeService.unlike = async (query) => {
   try {
-    let query = { _id: id }
-    let result = await LikeModel.findOneAndDelete(query)
-    return result
+    let followed = await LikeModel.findOneAndUpdate(
+      {
+        ...query,
+        active: true,
+      },
+      { active: false }
+    )
+
+    if (!followed) throw Error('Not Liked!')
+    await BlogModel.decrementLikes(query?.blog)
+    return { unliked: true }
   } catch (error) {
     throw error
   }

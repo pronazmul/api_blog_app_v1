@@ -31,7 +31,7 @@ router.use(
   AuthMiddleware.authenticate,
   NotificationsRoutes
 )
-router.use('/api/v1/likes', LikeRoutes)
+router.use('/api/v1/likes', AuthMiddleware.authenticate, LikeRoutes)
 router.use('/api/v1/comments', CommentsRoutes)
 
 // Module Exports
