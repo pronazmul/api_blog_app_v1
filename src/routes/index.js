@@ -20,8 +20,8 @@ router.use('/health', (_req, res) => res.status(200).json({ status: 'ok' }))
 
 // Application Routes
 router.use('/api/v1/auth', AuthRoutes)
-router.use('/api/v1/roles', RoleRoutes)
-router.use('/api/v1/users', UserRoutes)
+router.use('/api/v1/roles', AuthMiddleware.authenticate, RoleRoutes)
+router.use('/api/v1/users', AuthMiddleware.authenticate, UserRoutes)
 router.use('/api/v1/followers', AuthMiddleware.authenticate, FollowerRoutes)
 router.use('/api/v1/categories', CategoryRoutes)
 router.use('/api/v1/tags', TagRoutes)

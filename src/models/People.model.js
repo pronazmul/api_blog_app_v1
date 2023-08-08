@@ -60,17 +60,12 @@ PeopleSchema.post(/^find|^findOne|^findById/, function (docs, next) {
   if (Array.isArray(docs)) {
     let transformedDocs = docs.map((item) => {
       if (item?.avatar) {
-        return {
-          ...item,
-          avatar: `${config.server_url}/${config.user_directory}/${item.avatar}`,
-        }
-      } else {
-        return item
+        item.avatar = `${config.server_url}/${config.user_directory}/${item.avatar}`
       }
+      return item
     })
     docs = transformedDocs
   }
-
   next()
 })
 

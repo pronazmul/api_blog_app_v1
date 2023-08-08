@@ -65,15 +65,20 @@ const importData = async () => {
     // Write SubCategories
     let subCategories = []
     categories.forEach((cat) => {
-      let subs = DummyData.categories.filter((c) => c.name === cat.name)[0]
-      subCategories.push(
-        new SubCategoryModel({
-          category: cat._id,
-          name: subs.description,
-          description: subs.description,
-          image: subs.image,
-        })
-      )
+      let subs = DummyData.categories.find(
+        (c) => c.name === cat.name
+      ).subCategories
+
+      subs.forEach((sub) => {
+        subCategories.push(
+          new SubCategoryModel({
+            category: cat._id,
+            name: sub.name,
+            description: sub.description,
+            image: sub.image,
+          })
+        )
+      })
     })
 
     // Write Tags

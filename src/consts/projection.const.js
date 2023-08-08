@@ -13,4 +13,7 @@ ProjectionConst.role_with_user = 'name'
 
 ProjectionConst.follower = 'follower following active createdAt'
 
+ProjectionConst.category = 'name image description createdAt'
+ProjectionConst.subCateogry = 'category name image description createdAt'
+
 export default ProjectionConst

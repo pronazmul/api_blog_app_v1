@@ -9,6 +9,8 @@ import { join } from 'path'
 import config from './../config/index.js'
 import MongooseUtils from '../utils/mongoose.utils.js'
 import YupUtils from '../utils/yup.utils.js'
+import FilesUtils from '../utils/files.utils.js'
+import fs from 'fs'
 
 // Initialize Module =
 const GlobalMiddlewares = {}
@@ -69,12 +71,27 @@ GlobalMiddlewares.notFound = (req, res, next) => {
  *Title : Custom Error Handler Middleware
  *Description: Application Last Middleware take 4 parameters.This middleware is used to handle errors. Send a custom error message to Client Interface.
  */
-GlobalMiddlewares.error = (error, req, res, next) => {
+GlobalMiddlewares.error = async (error, req, res, next) => {
   // Default Errors
   let statusCode = error?.status || 500
   let message = error?.message || 'Something Went Wrong!'
   let errors = []
   let stack = error?.stack || ''
+
+  // Unlink Uploaded Files If Request Contains
+  if (req.files) {
+    // Close all streams before attempting to unlink
+    req.files.forEach((file) => {
+      if (file.stream) {
+        file.stream.close()
+      }
+    })
+
+    // Introduce a small delay before attempting to unlink
+    setTimeout(() => {
+      FilesUtils.removeReqFiles(req.files)
+    }, 1000)
+  }
 
   // Check Yup Validation Error
   if (error?.name === 'ValidationError' && error?.inner?.length) {

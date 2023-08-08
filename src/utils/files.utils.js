@@ -30,6 +30,16 @@ FilesUtils.removeOne = async (dirName, fileName) => {
   }
 }
 
+FilesUtils.removeReqFiles = (reqFiles) => {
+  reqFiles.forEach((file) => {
+    unlink(file.path, (err) => {
+      if (err) {
+        console.error(`Error deleting file ${file.path}: ${err}`)
+      }
+    })
+  })
+}
+
 /**
  * Creates a multer upload object with the specified settings.
  * @param {string} dirName - The directory for storing uploaded files.

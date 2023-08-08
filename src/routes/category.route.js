@@ -4,12 +4,66 @@ import { Router } from 'express'
 // Middlewares
 import ValidateMiddleware from '../middlewares/validate.middleware.js'
 import CategoryController from '../controllers/category.controller.js'
+import CategorySchema from './../schemas/category.schema.js'
+import FileMiddleware from '../middlewares/file.middlewares.js'
+import config from '../config/index.js'
+import SubCategorySchema from './../schemas/subCategory.schema.js'
 
 const router = Router()
 const { validateRequest } = ValidateMiddleware
+const { uploadFile, convertToWebp } = FileMiddleware
+
+//-----------------Sub CAtegories ----------------------
+/**
+ * @description Create New SubCategories
+ * @Route [POST]- /api/categories/subcategories
+ * @Access protected - []
+ * @returns {Objcet} - {}
+ */
+router.post(
+  '/subcategories',
+  uploadFile(['image'], config.category_directory, 'image', 1),
+  convertToWebp(config.category_directory),
+  validateRequest(SubCategorySchema.create),
+  CategoryController.createSubCat
+)
 
 /**
- * @description Retrive Single Data By ID
+ * @description Retrive All Subcategories
+ * @Route [GET]- /api/categories/subcategories
+ * @Access protected - []
+ * @returns {Array} - JSON Array
+ */
+router.get(
+  '/subcategories',
+  validateRequest(SubCategorySchema.fetchAll),
+  CategoryController.findAllSubCat
+)
+
+/**
+ * @description Retrive SingleSubCategoriesByID
+ * @Route [GET]- /api/categories/subcategories/:id
+ * @Access protected - []
+ * @returns {Object} - {}
+ */
+router.get('/subcategories/:id', CategoryController.findSubCatById)
+
+/**
+ * @description Retrive Update Subcat By ID
+ * @Route [PUT]- /api/categories/subcategories/:id
+ * @Access protected - []
+ * @returns {Object} - {}
+ */
+router.put(
+  '/subcategories/:id',
+  validateRequest(SubCategorySchema.update),
+  CategoryController.updateSubCatById
+)
+
+//-----------------Sub CAtegories ----------------------
+
+/**
+ * @description Retrive Single Category By ID
  * @Route [GET]- /api/categories/:id
  * @Access protected - []
  * @returns {Object} - Single Object
@@ -17,40 +71,40 @@ const { validateRequest } = ValidateMiddleware
 router.get('/:id', CategoryController.findOneById)
 
 /**
- * @description Update Data BY ID
+ * @description Update Category BY ID
  * @Route [PUT]- /api/categories/:id
  * @Access protected - []
  * @returns {Object} - Updated Data
  */
 router.put(
   '/:id',
-  // validateRequest(UserSchema.update),
+  validateRequest(CategorySchema.update),
   CategoryController.updateOneById
 )
 
 /**
- * @description Delete Data By ID
- * @Route [DELETE]- /api/categories/:id
- * @Access protected - []
- * @returns {Object} - Deleted Status.
- */
-router.delete('/:id', CategoryController.deleteOneById)
-
-/**
  * @description Retrive All Data
- * @Route [GET]- /api/categories?search=khulna&page=2&limit=1&sortBy=name&sortOrder=desc&username=nazmul&address.city=nazmul&active=true&abcd=fksdfj
+ * @Route [GET]- /api/categories
  * @Access protected - []
  * @returns {Array} - All Filtered Data Array
  */
 router.get(
   '/',
-  // validateRequest(UserSchema.fetchAllUser),
+  validateRequest(CategorySchema.fetchAll),
   CategoryController.find
 )
 
+/**
+ * @description Create New Category
+ * @Route [POST]- /api/categories
+ * @Access protected - []
+ * @returns {Array} - Created Category Docs
+ */
 router.post(
   '/',
-  // validateRequest(UserSchema.fetchAllUser),
+  uploadFile(['image'], config.category_directory, 'image', 1),
+  convertToWebp(config.category_directory),
+  validateRequest(CategorySchema.create),
   CategoryController.create
 )
 

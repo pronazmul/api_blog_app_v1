@@ -84,6 +84,7 @@ FileMiddleware.convertToWebp = (dirName) => (req, res, next) => {
         return {
           ...file,
           filename: file.filename.replace(path.extname(file.filename), '.webp'),
+          path: file.path.replace(path.extname(file.path), '.webp'),
         }
       } else {
         return { ...file }
