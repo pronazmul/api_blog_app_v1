@@ -4,47 +4,32 @@ import { Router } from 'express'
 // Middlewares
 import ValidateMiddleware from '../middlewares/validate.middleware.js'
 import CommentController from '../controllers/comment.controller.js'
+import CommentSchema from '../schemas/comment.schema.js'
 
 const router = Router()
 const { validateRequest } = ValidateMiddleware
 
 /**
- * @description Retrive Single Data By ID
- * @Route [GET]- /api/comments/:id
+ * @description Make new Commment
+ * @Route [GET]- /api/comments/:blogID
  * @Access protected - []
- * @returns {Object} - Single Object
+ * @returns {Object} - Single Comment
  */
-router.get('/:id', CommentController.findOneById)
-
-/**
- * @description Update Data BY ID
- * @Route [PUT]- /api/comments/:id
- * @Access protected - []
- * @returns {Object} - Updated Data
- */
-router.put(
+router.post(
   '/:id',
-  // validateRequest(UserSchema.update),
-  CommentController.updateOneById
+  validateRequest(CommentSchema.create),
+  CommentController.create
 )
 
 /**
- * @description Delete Data By ID
- * @Route [DELETE]- /api/comments/:id
- * @Access protected - []
- * @returns {Object} - Deleted Status.
- */
-router.delete('/:id', CommentController.deleteOneById)
-
-/**
- * @description Retrive All Data
- * @Route [GET]- /api/comments?search=khulna&page=2&limit=1&sortBy=name&sortOrder=desc&username=nazmul&address.city=nazmul&active=true&abcd=fksdfj
+ * @description Retrive All Coments
+ * @Route [GET]- /api/comments/:blogID
  * @Access protected - []
  * @returns {Array} - All Filtered Data Array
  */
 router.get(
-  '/',
-  // validateRequest(UserSchema.fetchAllUser),
+  '/:id',
+  validateRequest(CommentSchema.fetchAll),
   CommentController.find
 )
 

@@ -32,7 +32,7 @@ router.use(
   NotificationsRoutes
 )
 router.use('/api/v1/likes', AuthMiddleware.authenticate, LikeRoutes)
-router.use('/api/v1/comments', CommentsRoutes)
+router.use('/api/v1/comments', AuthMiddleware.authenticate, CommentsRoutes)
 
 // Module Exports
 export default router

@@ -10,21 +10,9 @@ const CommentController = {}
 
 CommentController.create = async (req, res, next) => {
   try {
-    let data = await CommentService.create(req.body)
-    let response = GlobalUtils.fromatResponse(data, 'Blog Create Success!')
-    res.status(200).json(response)
-  } catch (error) {
-    next(createError(500, error))
-  }
-}
-
-CommentController.findOneById = async (req, res, next) => {
-  try {
-    let data = await CommentService.findOneById(req.params.id)
-    let response = GlobalUtils.fromatResponse(
-      data,
-      'Single Blog Fetch Success!'
-    )
+    let payload = { ...req.body, blog: req.params.id }
+    let data = await CommentService.create(payload)
+    let response = GlobalUtils.fromatResponse(data, 'Comment Success!')
     res.status(200).json(response)
   } catch (error) {
     next(createError(500, error))
@@ -33,36 +21,13 @@ CommentController.findOneById = async (req, res, next) => {
 
 CommentController.find = async (req, res, next) => {
   try {
-    let result = await CommentService.find(req.query)
+    let reqQuery = { ...req.query, blog: req.params.id }
+    let result = await CommentService.find(reqQuery)
     let response = GlobalUtils.fromatResponse(
       result?.data,
-      'All Blogs Fetch success',
+      'All comments Blog Success!',
       result?.meta
     )
-    res.status(200).json(response)
-  } catch (error) {
-    next(createError(500, error))
-  }
-}
-
-CommentController.updateOneById = async (req, res, next) => {
-  try {
-    let id = req.params.id
-    let data = req.body
-    let result = CommentService.updateOneById(id, data)
-
-    let response = GlobalUtils.fromatResponse(result, 'Blog Update Success!')
-    res.status(200).json(response)
-  } catch (error) {
-    next(createError(500, error))
-  }
-}
-
-CommentController.deleteOneById = async (req, res, next) => {
-  try {
-    let id = req.params.id
-    let result = CommentService.deleteOneById(id)
-    let response = GlobalUtils.fromatResponse(result, 'Blog Delete Success')
     res.status(200).json(response)
   } catch (error) {
     next(createError(500, error))
