@@ -5,6 +5,7 @@ import createError from 'http-errors'
 import GlobalUtils from '../utils/global.utils.js'
 import BlogService from '../services/blog.service.js'
 import TagService from '../services/tag.service.js'
+import NotificationService from '../services/notification.service.js'
 
 // Initialize Module
 const BlogController = {}
@@ -13,18 +14,27 @@ BlogController.create = async (req, res, next) => {
   try {
     // Parse Stringify Tags && Inset Blogs Count to Tags
     let tags = JSON.parse(req?.body?.tags)
-
     for (let id of tags) {
       await TagService.incrementBlogCount(id)
     }
 
     let payload = { ...req.body, tags, user: req?.user?._id }
 
+    // Insert Files to payload if supplied
     if (req?.files[0]?.filename) {
       payload.image = req?.files[0]?.filename
     }
 
+    // Create Blog
     let data = await BlogService.create(payload)
+
+    // Trigger Blog create Notification for Creator Followers
+    await NotificationService.triggerBlogNotification(req.user._id, {
+      blog: data._id,
+      type: 'blog',
+      content: `${req?.user?.name} Create a New Blog`,
+    })
+
     let response = GlobalUtils.fromatResponse(data, 'Blog Create Success!')
     res.status(200).json(response)
   } catch (error) {

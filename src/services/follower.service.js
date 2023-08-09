@@ -62,10 +62,6 @@ FollowerService.find = async (reqQuery) => {
   try {
     const result = await FollowerModel.find(query, ProjectionConst.follower)
       .populate({
-        path: 'follower',
-        select: ProjectionConst.user_with_follower,
-      })
-      .populate({
         path: 'following',
         select: ProjectionConst.user_with_follower,
       })

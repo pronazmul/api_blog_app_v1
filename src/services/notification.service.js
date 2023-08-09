@@ -3,6 +3,7 @@ import MongooseUtils from '../utils/mongoose.utils.js'
 import NotificationModel from '../models/Notification.model.js'
 import NotificationConst from '../consts/notification.const.js'
 import ProjectionConst from '../consts/projection.const.js'
+import FollowerModel from '../models/Follower.model.js'
 
 // Initialize Module
 const NotificationService = {}
@@ -47,6 +48,23 @@ NotificationService.find = async (reqQuery) => {
     const total = await NotificationModel.countDocuments(query)
 
     return { data: result, meta: { page, limit, total } }
+  } catch (error) {
+    throw error
+  }
+}
+
+NotificationService.triggerBlogNotification = async (creatorId, payload) => {
+  try {
+    let followers = await FollowerModel.find({ follower: creatorId }).lean()
+    if (!followers?.length) return
+
+    for (let item of followers) {
+      await NotificationModel.create({
+        ...payload,
+        creator: creatorId,
+        user: item?.following,
+      })
+    }
   } catch (error) {
     throw error
   }

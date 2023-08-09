@@ -9,8 +9,11 @@ const BlogService = {}
 
 BlogService.create = async (payload) => {
   try {
+    // Create Blog
     let newData = new BlogModel(payload)
     await newData.save()
+
+    // Fetch Single Blog and response
     let result = await BlogModel.findById(
       { _id: newData._id },
       ProjectionConst.blog

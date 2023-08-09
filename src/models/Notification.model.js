@@ -7,7 +7,11 @@ const NotificationSchema = Schema(
     user: { type: Types.ObjectId, ref: 'People', required: true },
     blog: { type: Types.ObjectId, ref: 'Blog' },
     content: { type: String, required: true },
-    type: { type: String, enum: ['blog'], default: 'blog' },
+    type: {
+      type: String,
+      enum: ['blog', 'like', 'comment', 'follow'],
+      default: 'blog',
+    },
     readStatus: { type: Boolean, default: false },
   },
   { timestamps: true, versionKey: false }
