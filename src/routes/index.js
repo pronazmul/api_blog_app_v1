@@ -9,6 +9,7 @@ import LikeRoutes from './like.route.js'
 import FollowerRoutes from './follower.route.js'
 import NotificationsRoutes from './notification.route.js'
 import CommentsRoutes from './comment.route.js'
+import AnalyticsRoutes from './analytics.route.js'
 
 // Middleware
 import AuthMiddleware from '../middlewares/auth.middlewares.js'
@@ -33,6 +34,7 @@ router.use(
 )
 router.use('/api/v1/likes', AuthMiddleware.authenticate, LikeRoutes)
 router.use('/api/v1/comments', AuthMiddleware.authenticate, CommentsRoutes)
+router.use('/api/v1/analytics', AnalyticsRoutes)
 
 // Module Exports
 export default router

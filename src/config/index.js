@@ -11,6 +11,7 @@ export default {
   jwt_secret: process.env.JWT_SECRET,
   access_token: process.env.ACCESS_TOKEN,
   refresh_token: process.env.REFRESH_TOKEN,
+  default_analytics_time: process.env.DEFAULT_ANALYITCS_TIME,
 
   __dirname: process.cwd(),
   filePath: join(process.cwd(), 'public'),
