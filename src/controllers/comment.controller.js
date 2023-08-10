@@ -4,6 +4,7 @@ import createError from 'http-errors'
 // Internal Modules:
 import GlobalUtils from '../utils/global.utils.js'
 import CommentService from '../services/comment.service.js'
+import NotificationService from '../services/notification.service.js'
 
 // Initialize Module
 const CommentController = {}
@@ -12,6 +13,16 @@ CommentController.create = async (req, res, next) => {
   try {
     let payload = { ...req.body, blog: req.params.id }
     let data = await CommentService.create(payload)
+
+    // Trigger Comment Notification
+    await NotificationService.makeNotification({
+      type: 'comment',
+      creator: req.user._id,
+      user: data?.blog?.user,
+      blog: req.params.id,
+      content: `${req.user.name} Commented on your Blog!`,
+    })
+
     let response = GlobalUtils.fromatResponse(data, 'Comment Success!')
     res.status(200).json(response)
   } catch (error) {

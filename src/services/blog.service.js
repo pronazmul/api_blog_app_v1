@@ -111,4 +111,19 @@ BlogService.deleteOneById = async (id) => {
   }
 }
 
+BlogService.findUserByBlogId = async (id) => {
+  try {
+    let query = { _id: id }
+    let projection = ProjectionConst.blog
+    let result = await BlogModel.findById(query, projection).populate({
+      path: 'user',
+      select: ProjectionConst.blog_user,
+    })
+
+    return result
+  } catch (error) {
+    throw error
+  }
+}
+
 export default BlogService

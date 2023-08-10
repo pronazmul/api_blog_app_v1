@@ -70,4 +70,12 @@ NotificationService.triggerBlogNotification = async (creatorId, payload) => {
   }
 }
 
+NotificationService.makeNotification = async (payload) => {
+  try {
+    await NotificationModel.create(payload)
+  } catch (error) {
+    throw error
+  }
+}
+
 export default NotificationService

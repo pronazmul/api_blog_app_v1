@@ -39,7 +39,7 @@ ProjectionConst.like_user = 'avatar name username'
 
 // Comment Projections
 ProjectionConst.comment = 'user blog active content createdAt'
-ProjectionConst.comment_blog = 'title image'
+ProjectionConst.comment_blog = 'title image user'
 ProjectionConst.comment_user = 'avatar name username'
 
 export default ProjectionConst

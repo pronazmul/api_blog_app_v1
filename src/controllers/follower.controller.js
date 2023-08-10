@@ -4,6 +4,7 @@ import createError from 'http-errors'
 // Internal Modules:
 import GlobalUtils from '../utils/global.utils.js'
 import FollowerService from '../services/follower.service.js'
+import NotificationService from '../services/notification.service.js'
 
 // Initialize Module
 const FollowerController = {}
@@ -12,6 +13,15 @@ FollowerController.follow = async (req, res, next) => {
   let reqQuery = { following: req.user._id, follower: req.params.id }
   try {
     let result = await FollowerService.follow(reqQuery)
+
+    // Trigger Follower Notification
+    await NotificationService.makeNotification({
+      type: 'follow',
+      creator: req.user._id,
+      user: req.params.id,
+      content: `${req.user.name} followed you!`,
+    })
+
     let response = GlobalUtils.fromatResponse(
       result?.data,
       'Follow Success!',

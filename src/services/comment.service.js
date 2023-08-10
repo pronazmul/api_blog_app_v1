@@ -15,10 +15,15 @@ CommentService.create = async (payload) => {
     let result = await CommentModel.findById(
       { _id: newData._id },
       ProjectionConst.comment
-    ).populate({
-      path: 'user',
-      select: ProjectionConst.comment_user,
-    })
+    )
+      .populate({
+        path: 'user',
+        select: ProjectionConst.comment_user,
+      })
+      .populate({
+        path: 'blog',
+        select: ProjectionConst.comment_blog,
+      })
 
     return result
   } catch (error) {
