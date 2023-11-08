@@ -1,4 +1,4 @@
-<h1 align="center">Community Api</h1>
+<h1 align="center">Blog Api</h1>
 
 #### `Authentication`:
 
