@@ -26,7 +26,7 @@ Welcome to the `Blog` API! This guide will provide the necessary information to 
 - Notifications Apis.
 - Analytics Apis.
 
-## Complete Documentation
+## Postman Documentation
 - <a href="https://documenter.getpostman.com/view/11483431/2s9YC32Zpi" target="_blank">✍️ Blog✨ Api</a>
 
 ## Conclusion
