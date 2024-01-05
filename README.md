@@ -2,16 +2,6 @@
 
 Welcome to the `Blog` API! This guide will provide the necessary information to understand and utilize our API effectively. We have followed industry best practices to ensure clear, consistent, and user-friendly Apis.
 
-## `Features`:
-
-- Token-based auth, Access & Refresh Token.
-- Role Management System.
-- Converted Images to WebP.
-- Strict Data validation (No Undefined Data Allowed).
-- Customisable Searching, Sorting, Filtering, and Pagination Functionality.
-- Module Based Features (Can extend Anytime).
-- Generate Notifications for each Activity.
-
 - ## `Functionalities`:
 
 - Authentication Apis.
@@ -25,6 +15,17 @@ Welcome to the `Blog` API! This guide will provide the necessary information to 
 - Comment Apis.
 - Notifications Apis.
 - Analytics Apis.
+
+## `Features`:
+
+- Token-based auth, Access & Refresh Token.
+- Role Management System.
+- Converted Images to WebP.
+- Strict Data validation (No Undefined Data Allowed).
+- Customisable Searching, Sorting, Filtering, and Pagination Functionality.
+- Module Based Features (Can extend Anytime).
+- Generate Notifications for each Activity.
+
 
 ## Postman Documentation
 - <a href="https://documenter.getpostman.com/view/11483431/2s9YC32Zpi" target="_blank">✍️ Blog✨ Api</a>
